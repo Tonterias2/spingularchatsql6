@@ -43,6 +43,21 @@ public class CacheConfiguration {
             createCache(cm, com.spingular.chat.domain.User.class.getName());
             createCache(cm, com.spingular.chat.domain.Authority.class.getName());
             createCache(cm, com.spingular.chat.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.spingular.chat.domain.ChatUser.class.getName());
+            createCache(cm, com.spingular.chat.domain.ChatUser.class.getName() + ".chatRooms");
+            createCache(cm, com.spingular.chat.domain.ChatUser.class.getName() + ".chatMessages");
+            createCache(cm, com.spingular.chat.domain.ChatUser.class.getName() + ".chatRoomAllowedUsers");
+            createCache(cm, com.spingular.chat.domain.ChatUser.class.getName() + ".offensiveMessages");
+            createCache(cm, com.spingular.chat.domain.ChatRoom.class.getName());
+            createCache(cm, com.spingular.chat.domain.ChatRoom.class.getName() + ".chatMessages");
+            createCache(cm, com.spingular.chat.domain.ChatRoom.class.getName() + ".chatRoomAllowedUsers");
+            createCache(cm, com.spingular.chat.domain.ChatRoom.class.getName() + ".chatNotifications");
+            createCache(cm, com.spingular.chat.domain.ChatRoomAllowedUser.class.getName());
+            createCache(cm, com.spingular.chat.domain.ChatMessage.class.getName());
+            createCache(cm, com.spingular.chat.domain.ChatMessage.class.getName() + ".chatNotifications");
+            createCache(cm, com.spingular.chat.domain.ChatMessage.class.getName() + ".offensiveMessages");
+            createCache(cm, com.spingular.chat.domain.OffensiveMessage.class.getName());
+            createCache(cm, com.spingular.chat.domain.ChatNotification.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
