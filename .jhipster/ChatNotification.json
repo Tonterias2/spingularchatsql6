@@ -1,0 +1,44 @@
+{
+    "name": "ChatNotification",
+    "fields": [
+        {
+            "fieldName": "creationDate",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "chatNotification",
+            "relationshipName": "user",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "chatMessage",
+            "otherEntityRelationshipName": "chatNotification",
+            "relationshipName": "chatMessage",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "chatRoom",
+            "otherEntityRelationshipName": "chatNotification",
+            "relationshipName": "chatRoom",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190618102640",
+    "entityTableName": "chat_notification",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

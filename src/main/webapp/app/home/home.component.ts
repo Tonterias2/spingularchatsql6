@@ -201,8 +201,8 @@ export class HomeComponent implements OnInit {
       return;
     }
     this.chatMessage = new Object();
-    this.chatMessage.chatUserId = this.account.id;
     this.chatMessage.chatUserId = this.currentAccount.id;
+    this.chatMessage.chatRoomId = this.currentChatRoomId;
     this.chatMessage.message = message;
     //      console.log('CONSOLOG: M:sendMessage & O: this.chatMessage: ', this.chatMessage);
     this.chatService.sendMessage(this.chatMessage);

@@ -1,0 +1,29 @@
+{
+  "spingularchatsql6App": {
+    "chatMessage": {
+      "home": {
+        "title": "Chat Messages",
+        "createLabel": "Create a new Chat Message",
+        "createOrEditLabel": "Create or edit a Chat Message",
+        "notFound": "No Chat Message found"
+      },
+      "created": "A new Chat Message is created with identifier {{ param }}",
+      "updated": "A Chat Message is updated with identifier {{ param }}",
+      "deleted": "A Chat Message is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Chat Message {{ id }}?"
+      },
+      "detail": {
+        "title": "Chat Message"
+      },
+      "messageSentAt": "Message Sent At",
+      "message": "Message",
+      "isRecieved": "Is Recieved",
+      "isDelivered": "Is Delivered",
+      "chatNotification": "Chat Notification",
+      "offensiveMessage": "Offensive Message",
+      "chatRoom": "Chat Room",
+      "chatUser": "Chat User"
+    }
+  }
+}

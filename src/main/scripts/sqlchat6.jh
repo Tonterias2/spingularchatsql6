@@ -1,0 +1,74 @@
+entity ChatUser {
+	creationDate Instant required,
+	bannedUser Boolean,
+	image ImageBlob
+}
+
+entity ChatRoom {
+	creationDate Instant required,
+	roomName String minlength(2) maxlength(50) required,
+    roomDescription String minlength(2) maxlength(250),
+    privateRoom Boolean,
+    image ImageBlob
+}
+
+entity ChatRoomAllowedUser {
+	creationDate Instant required,
+	bannedUser Boolean,
+    bannedDate Instant
+}
+
+entity ChatMessage {
+	messageSentAt String required,
+    message String maxlength(65000) required,
+    isRecieved Boolean,
+    isDelivered Boolean
+}
+
+entity OffensiveMessage {
+	creationDate Instant required,
+    isOffensive Boolean
+}
+
+entity ChatNotification {
+	creationDate Instant required
+}
+
+relationship OneToOne {
+    ChatUser{user(id)} to User{chatUser(id)}
+}
+
+// relationship ManyToMany {
+// }
+
+relationship OneToMany {
+	ChatUser{chatRoom(id)} to ChatRoom{chatUser(id)}
+    ChatRoom{chatMessage(id)} to ChatMessage{chatRoom(id)}
+    ChatRoom{chatRoomAllowedUser(id)} to ChatRoomAllowedUser{chatRoom(id)}
+	ChatUser{chatMessage(id)} to ChatMessage{chatUser(id)}
+	ChatUser{chatRoomAllowedUser(id)} to ChatRoomAllowedUser{chatUser(id)} 
+    ChatUser{offensiveMessage(id)} to OffensiveMessage{chatUser(id)}
+    ChatMessage{chatNotification(id)} to ChatNotification{chatMessage(id)}
+    ChatRoom{chatNotification(id)} to ChatNotification{chatRoom(id)}
+    ChatMessage{offensiveMessage(id)} to OffensiveMessage{chatMessage(id)}
+}
+
+relationship ManyToOne {
+	ChatNotification{user(id)} to User{chatNotification(id)}
+}
+
+// Set pagination options
+paginate ChatMessage with infinite-scroll
+paginate ChatRoom, ChatRoomAllowedUser with pagination
+
+// Use Data Transfert Objects (DTO)
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl // except , 
+
+// FILTERING:
+filter *
+
+// Set an angular suffix
+// angularSuffix * with mySuffix

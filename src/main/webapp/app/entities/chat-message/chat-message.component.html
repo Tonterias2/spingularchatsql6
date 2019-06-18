@@ -1,0 +1,75 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="spingularchatsql6App.chatMessage.home.title">Chat Messages</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-chat-message" [routerLink]="['/chat-message/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="spingularchatsql6App.chatMessage.home.createLabel">
+            Create new Chat Message
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="chatMessages?.length === 0">
+        <span jhiTranslate="spingularchatsql6App.chatMessage.home.notFound">No chatMessages found</span>
+    </div>
+    <div class="table-responsive" *ngIf="chatMessages?.length > 0">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="messageSentAt"><span jhiTranslate="spingularchatsql6App.chatMessage.messageSentAt">Message Sent At</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="message"><span jhiTranslate="spingularchatsql6App.chatMessage.message">Message</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="isRecieved"><span jhiTranslate="spingularchatsql6App.chatMessage.isRecieved">Is Recieved</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="isDelivered"><span jhiTranslate="spingularchatsql6App.chatMessage.isDelivered">Is Delivered</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="chatRoomId"><span jhiTranslate="spingularchatsql6App.chatMessage.chatRoom">Chat Room</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="chatUserId"><span jhiTranslate="spingularchatsql6App.chatMessage.chatUser">Chat User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tr *ngFor="let chatMessage of chatMessages ;trackBy: trackId">
+                <td><a [routerLink]="['/chat-message', chatMessage.id, 'view' ]">{{chatMessage.id}}</a></td>
+                <td>{{chatMessage.messageSentAt}}</td>
+                <td>{{chatMessage.message}}</td>
+                <td>{{chatMessage.isRecieved}}</td>
+                <td>{{chatMessage.isDelivered}}</td>
+                <td>
+                    <div *ngIf="chatMessage.chatRoomId">
+                        <a [routerLink]="['../chat-room', chatMessage.chatRoomId , 'view' ]" >{{chatMessage.chatRoomId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="chatMessage.chatUserId">
+                        <a [routerLink]="['../chat-user', chatMessage.chatUserId , 'view' ]" >{{chatMessage.chatUserId}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/chat-message', chatMessage.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/chat-message', chatMessage.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'chat-message', { outlets: { popup: chatMessage.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

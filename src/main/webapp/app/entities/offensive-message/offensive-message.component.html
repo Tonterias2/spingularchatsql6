@@ -1,0 +1,71 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="spingularchatsql6App.offensiveMessage.home.title">Offensive Messages</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-offensive-message" [routerLink]="['/offensive-message/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="spingularchatsql6App.offensiveMessage.home.createLabel">
+            Create new Offensive Message
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="offensiveMessages?.length === 0">
+        <span jhiTranslate="spingularchatsql6App.offensiveMessage.home.notFound">No offensiveMessages found</span>
+    </div>
+    <div class="table-responsive" *ngIf="offensiveMessages?.length > 0">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="spingularchatsql6App.offensiveMessage.creationDate">Creation Date</span></th>
+            <th><span jhiTranslate="spingularchatsql6App.offensiveMessage.isOffensive">Is Offensive</span></th>
+            <th><span jhiTranslate="spingularchatsql6App.offensiveMessage.chatUser">Chat User</span></th>
+            <th><span jhiTranslate="spingularchatsql6App.offensiveMessage.chatMessage">Chat Message</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let offensiveMessage of offensiveMessages ;trackBy: trackId">
+                <td><a [routerLink]="['/offensive-message', offensiveMessage.id, 'view' ]">{{offensiveMessage.id}}</a></td>
+                <td>{{offensiveMessage.creationDate | date:'medium'}}</td>
+                <td>{{offensiveMessage.isOffensive}}</td>
+                <td>
+                    <div *ngIf="offensiveMessage.chatUserId">
+                        <a [routerLink]="['../chat-user', offensiveMessage.chatUserId , 'view' ]" >{{offensiveMessage.chatUserId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="offensiveMessage.chatMessageId">
+                        <a [routerLink]="['../chat-message', offensiveMessage.chatMessageId , 'view' ]" >{{offensiveMessage.chatMessageId}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/offensive-message', offensiveMessage.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/offensive-message', offensiveMessage.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'offensive-message', { outlets: { popup: offensiveMessage.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

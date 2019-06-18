@@ -1,0 +1,73 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="spingularchatsql6App.chatNotification.home.title">Chat Notifications</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-chat-notification" [routerLink]="['/chat-notification/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="spingularchatsql6App.chatNotification.home.createLabel">
+            Create new Chat Notification
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="chatNotifications?.length === 0">
+        <span jhiTranslate="spingularchatsql6App.chatNotification.home.notFound">No chatNotifications found</span>
+    </div>
+    <div class="table-responsive" *ngIf="chatNotifications?.length > 0">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="spingularchatsql6App.chatNotification.creationDate">Creation Date</span></th>
+            <th><span jhiTranslate="spingularchatsql6App.chatNotification.user">User</span></th>
+            <th><span jhiTranslate="spingularchatsql6App.chatNotification.chatMessage">Chat Message</span></th>
+            <th><span jhiTranslate="spingularchatsql6App.chatNotification.chatRoom">Chat Room</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let chatNotification of chatNotifications ;trackBy: trackId">
+                <td><a [routerLink]="['/chat-notification', chatNotification.id, 'view' ]">{{chatNotification.id}}</a></td>
+                <td>{{chatNotification.creationDate | date:'medium'}}</td>
+                <td>
+                    {{chatNotification.userId}}
+                </td>
+                <td>
+                    <div *ngIf="chatNotification.chatMessageId">
+                        <a [routerLink]="['../chat-message', chatNotification.chatMessageId , 'view' ]" >{{chatNotification.chatMessageId}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="chatNotification.chatRoomId">
+                        <a [routerLink]="['../chat-room', chatNotification.chatRoomId , 'view' ]" >{{chatNotification.chatRoomId}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/chat-notification', chatNotification.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/chat-notification', chatNotification.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'chat-notification', { outlets: { popup: chatNotification.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

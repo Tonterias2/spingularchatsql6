@@ -1,0 +1,118 @@
+<div>
+    <h2 id="page-heading">
+       	<table style="width:100%">
+		  <tr>
+	        <span jhiTranslate="spingularchatsql6App.chatRoom.home.title">Chat Rooms</span>
+		  </tr>
+		  <tr>
+		    <td>
+   		        <button id="jh-my-entity" class="btn btn-primary float-left jh-create-entity create-chat-room" (click)="myChatRooms()">
+		            <fa-icon [icon]="'plus'"></fa-icon>
+		            <span  jhiTranslate="spingularchatsql6App.chatRoom.home.myLabel">
+		            My Chat Room
+		            </span>
+		        </button>
+			</td>
+		    <td>
+		        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-chat-room" [routerLink]="['/chat-room/new']">
+		            <fa-icon [icon]="'plus'"></fa-icon>
+		            <span  jhiTranslate="spingularchatsql6App.chatRoom.home.createLabel">
+		            Create new Chat Room
+		            </span>
+		        </button>
+			</td> 
+		  </tr>
+		</table>
+    </h2>
+    <jhi-alert></jhi-alert>
+      <div class="row">
+        <div class="col-sm-12">
+			<form name="searchForm" class="form-inline">
+	             <div class="input-group w-100 mt-3" style="width:100%">
+	                 <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'spingularchatsql6App.chatRoom.home.search' | translate }}">
+	                 <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+	                     <fa-icon [icon]="'search'"></fa-icon>
+	                 </button>
+	                 <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+	                     <fa-icon [icon]="'trash-alt'"></fa-icon>
+	                 </button>
+	             </div>
+	         </form>
+        </div>
+    </div>
+    <br/>
+    <div class="alert alert-warning" *ngIf="chatRooms?.length === 0">
+        <span jhiTranslate="spingularchatsql6App.chatRoom.home.notFound">No chatRooms found</span>
+    </div>
+    <div class="table-responsive" *ngIf="chatRooms?.length > 0">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="creationDate"><span jhiTranslate="spingularchatsql6App.chatRoom.creationDate">Creation Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="roomName"><span jhiTranslate="spingularchatsql6App.chatRoom.roomName">Room Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="roomDescription"><span jhiTranslate="spingularchatsql6App.chatRoom.roomDescription">Room Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="privateRoom"><span jhiTranslate="spingularchatsql6App.chatRoom.privateRoom">Private Room</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="image"><span jhiTranslate="spingularchatsql6App.chatRoom.image">Image</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="chatUserId"><span jhiTranslate="spingularchatsql6App.chatRoom.chatUser">Chat User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let chatRoom of chatRooms ;trackBy: trackId">
+                <td><a [routerLink]="['/chat-room', chatRoom.id, 'view' ]">{{chatRoom.id}}</a></td>
+                <td>{{chatRoom.creationDate | date:'medium'}}</td>
+                <td>{{chatRoom.roomName}}</td>
+                <td>{{chatRoom.roomDescription}}</td>
+                <td>{{chatRoom.privateRoom}}</td>
+                <td>
+                    <a *ngIf="chatRoom.image" (click)="openFile(chatRoom.imageContentType, chatRoom.image)">
+                        <img [src]="'data:' + chatRoom.imageContentType + ';base64,' + chatRoom.image" style="max-height: 30px;" alt="chatRoom image"/>
+                    </a>
+                    <span *ngIf="chatRoom.image">{{chatRoom.imageContentType}}, {{byteSize(chatRoom.image)}}</span>
+                </td>
+                <td>
+                    <div *ngIf="chatRoom.chatUserId">
+                        <a [routerLink]="['../chat-user', chatRoom.chatUserId , 'view' ]" >{{chatRoom.chatUserId}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                    	<a [routerLink]="['/chat-room-allowed-user/participants']" [queryParams]="{ 'chatRoomIdEquals': chatRoom.id }" class="list-group-item list-group-item-action justify-content-between">
+							<span><i class="icon-notebook g-pos-rel g-top-1 g-mr-8"></i> Participants</span>
+						</a>
+                        <button type="submit"
+                                [routerLink]="['/chat-room', chatRoom.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button *ngIf="owner === chatRoom.chatUserId || isAdmin == true" type="submit"
+                                [routerLink]="['/chat-room', chatRoom.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button *ngIf="owner === chatRoom.chatUserId || isAdmin == true" type="submit"
+                                [routerLink]="['/', 'chat-room', { outlets: { popup: chatRoom.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div [hidden]="chatRooms?.length === 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+id;creation_date;banned_user;image;image_content_type
+1;2019-06-18T01:27:32;true;../data/blob/hipster.png;image/png
+2;2019-06-17T11:37:51;false;../data/blob/hipster.png;image/png
+3;2019-06-17T16:52:48;true;../data/blob/hipster.png;image/png
+4;2019-06-17T20:04:48;true;../data/blob/hipster.png;image/png
+5;2019-06-18T06:42:12;false;../data/blob/hipster.png;image/png
+6;2019-06-18T06:42:14;false;../data/blob/hipster.png;image/png
+7;2019-06-18T09:03:13;false;../data/blob/hipster.png;image/png
+8;2019-06-17T13:39:35;false;../data/blob/hipster.png;image/png
+9;2019-06-17T20:01:16;false;../data/blob/hipster.png;image/png
+10;2019-06-17T17:27:15;true;../data/blob/hipster.png;image/png

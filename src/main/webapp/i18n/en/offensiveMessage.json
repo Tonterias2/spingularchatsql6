@@ -1,0 +1,25 @@
+{
+  "spingularchatsql6App": {
+    "offensiveMessage": {
+      "home": {
+        "title": "Offensive Messages",
+        "createLabel": "Create a new Offensive Message",
+        "createOrEditLabel": "Create or edit a Offensive Message",
+        "notFound": "No Offensive Message found"
+      },
+      "created": "A new Offensive Message is created with identifier {{ param }}",
+      "updated": "A Offensive Message is updated with identifier {{ param }}",
+      "deleted": "A Offensive Message is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Offensive Message {{ id }}?"
+      },
+      "detail": {
+        "title": "Offensive Message"
+      },
+      "creationDate": "Creation Date",
+      "isOffensive": "Is Offensive",
+      "chatUser": "Chat User",
+      "chatMessage": "Chat Message"
+    }
+  }
+}
