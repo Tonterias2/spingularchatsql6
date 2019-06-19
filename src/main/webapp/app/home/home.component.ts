@@ -9,6 +9,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { Observable } from 'rxjs';
 
 import { IChatRoom } from 'app/shared/model/chat-room.model';
 
@@ -23,6 +26,9 @@ import { ChatUserService } from '../entities/chat-user/chat-user.service';
 
 import { IChatRoomAllowedUser } from 'app/shared/model/chat-room-allowed-user.model';
 import { ChatRoomAllowedUserService } from '../entities/chat-room-allowed-user/chat-room-allowed-user.service';
+
+import { IChatNotification, ChatNotification } from 'app/shared/model/chat-notification.model';
+import { ChatNotificationService } from '../entities/chat-notification/chat-notification.service';
 
 @Component({
   selector: 'jhi-home',
@@ -41,6 +47,8 @@ export class HomeComponent implements OnInit {
   chatUsers: IChatUser[];
   chatRooms: IChatRoom[];
   chatRoomAllowedUsers: IChatRoomAllowedUser[];
+  notifyChatRoomAllowedUsers: IChatRoomAllowedUser[];
+  chatNotification: IChatNotification;
 
   currentAccount: any;
   error: any;
@@ -69,6 +77,7 @@ export class HomeComponent implements OnInit {
     protected chatMessageService: ChatMessageService,
     protected chatUserService: ChatUserService,
     protected chatRoomAllowedUserService: ChatRoomAllowedUserService,
+    protected chatNotificationService: ChatNotificationService,
     protected parseLinks: JhiParseLinks,
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -118,7 +127,7 @@ export class HomeComponent implements OnInit {
         const query2 = {};
         query2['chatUserId.equals'] = this.chatUser.id;
         query2['bannedUser.equals'] = 'false';
-        query2['queryParams'] = 1;
+        query2['queryParams'] = 2;
         this.chatRoomAllowedUserService.query(query2).subscribe(
           (res2: HttpResponse<IChatRoomAllowedUser[]>) => {
             //                          console.log('CONSOLOG: M:myChatRooms & O: query2 : ', query2);
@@ -207,6 +216,48 @@ export class HomeComponent implements OnInit {
     //      console.log('CONSOLOG: M:sendMessage & O: this.chatMessage: ', this.chatMessage);
     this.chatService.sendMessage(this.chatMessage);
     this.message = '';
+    this.notifyCRAUs();
+  }
+
+  notifyCRAUs() {
+    //    console.log('CONSOLOG: M:fetchChatRoom & O: chatRoomId : ', chatRoomId);
+    // !!!!!!! HACE FALTA UN IF PARA COMPROBAR SI TENEMOS CAHT MESSAGE !!!!!!!!!!!!!!!=====================================
+    const query = {};
+    query['chatRoomId.equals'] = this.chatMessage.chatRoomId;
+    query['chatUserId.equals'] = this.chatMessage.chatUserId;
+    query['message.equals'] = this.chatMessage.message;
+    query['queryParams'] = 3;
+    console.log('CONSOLOG: M:notifyCRAUs & O: query : ', query);
+    this.chatMessageService.query(query).subscribe(
+      (res: HttpResponse<IChatMessage[]>) => {
+        this.chatMessage = res.body[0];
+        console.log('CONSOLOG: M:fetchChatRoom & O: this.chatMessage : ', this.chatMessage);
+      },
+      (res: HttpErrorResponse) => this.onError(res.message)
+    );
+    const query2 = {};
+    query2['chatRoomId.equals'] = this.chatMessage.chatRoomId;
+    query2['queryParams'] = 1;
+    console.log('CONSOLOG: M:notifyCRAUs & O: query2 : ', query2);
+    this.chatRoomAllowedUserService.query(query2).subscribe(
+      (res2: HttpResponse<IChatRoomAllowedUser[]>) => {
+        this.notifyChatRoomAllowedUsers = res2.body;
+        console.log('CONSOLOG: M:sendMessage & O: notifyChatRoomAllowedUsers : ', this.notifyChatRoomAllowedUsers);
+        if (this.notifyChatRoomAllowedUsers != null) {
+          const arrayChatRoomAllowedUsers = [];
+          this.notifyChatRoomAllowedUsers.forEach(chatRoomAllowedUser => {
+            console.log('CONSOLOG: M:sendMessage & O: DENTRO DEL FOREACH que hace el CHATNOTIFICATION ');
+            this.chatNotification = new Object();
+            this.chatNotification.userId = chatRoomAllowedUser.id;
+            this.chatNotification.chatMessageId = this.chatMessage.id;
+            this.chatNotification.chatRoomId = this.chatMessage.chatRoomId;
+            this.chatNotification.creationDate = moment(this.chatMessage.messageSentAt);
+            this.subscribeToSaveResponse(this.chatNotificationService.create(this.chatNotification));
+          });
+        }
+      },
+      (res2: HttpErrorResponse) => this.onError(res2.message)
+    );
   }
 
   loadAll() {}
@@ -217,7 +268,7 @@ export class HomeComponent implements OnInit {
     if (chatRoomId !== undefined) {
       const query = {};
       query['chatRoomId.equals'] = this.currentChatRoomId;
-      //      query['queryParams'] = 1;
+      query['queryParams'] = 1;
       //      console.log('CONSOLOG: M:fetchChatRoom & O: query : ', query);
       this.chatMessageService.query(query).subscribe(
         (res: HttpResponse<IChatMessage[]>) => {
@@ -246,6 +297,19 @@ export class HomeComponent implements OnInit {
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
     this.chatRooms = data;
     //    console.log('CONSOLOG: M:paginateChatRooms & O: this.chatRooms : ', this.chatRooms);
+  }
+
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IChatNotification>>) {
+    result.subscribe((res: HttpResponse<IChatNotification>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    //    this.isSaving = false;
+    //    this.previousState();
+  }
+
+  protected onSaveError() {
+    //    this.isSaving = false;
   }
 
   protected onError(errorMessage: string) {
