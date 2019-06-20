@@ -9,6 +9,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { Observable } from 'rxjs';
 
 import { IChatRoom } from 'app/shared/model/chat-room.model';
 
@@ -23,6 +26,9 @@ import { ChatUserService } from '../entities/chat-user/chat-user.service';
 
 import { IChatRoomAllowedUser } from 'app/shared/model/chat-room-allowed-user.model';
 import { ChatRoomAllowedUserService } from '../entities/chat-room-allowed-user/chat-room-allowed-user.service';
+
+import { IChatNotification, ChatNotification } from 'app/shared/model/chat-notification.model';
+import { ChatNotificationService } from '../entities/chat-notification/chat-notification.service';
 
 @Component({
   selector: 'jhi-home',
@@ -40,7 +46,11 @@ export class HomeComponent implements OnInit {
   chatUser: IChatUser;
   chatUsers: IChatUser[];
   chatRooms: IChatRoom[];
+  chatRoom: IChatRoom;
   chatRoomAllowedUsers: IChatRoomAllowedUser[];
+  notifyChatRoomAllowedUsers: IChatRoomAllowedUser[];
+  chatNotifications: IChatNotification[];
+  chatNotification: IChatNotification;
 
   currentAccount: any;
   error: any;
@@ -69,6 +79,7 @@ export class HomeComponent implements OnInit {
     protected chatMessageService: ChatMessageService,
     protected chatUserService: ChatUserService,
     protected chatRoomAllowedUserService: ChatRoomAllowedUserService,
+    protected chatNotificationService: ChatNotificationService,
     protected parseLinks: JhiParseLinks,
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -90,7 +101,7 @@ export class HomeComponent implements OnInit {
       this.chatUserService.query(query).subscribe(
         (res: HttpResponse<IChatUser[]>) => {
           this.chatUser = res.body[0];
-          //                    //          console.log('CONSOLOG: M:ngOnInit & O: this.chatUser : ', this.chatUser);
+          console.log('CONSOLOG: M:ngOnInit & O: this.chatUser : ', this.chatUser);
           this.myChatRooms();
         },
         (res: HttpErrorResponse) => this.onError(res.message)
@@ -118,7 +129,7 @@ export class HomeComponent implements OnInit {
         const query2 = {};
         query2['chatUserId.equals'] = this.chatUser.id;
         query2['bannedUser.equals'] = 'false';
-        query2['queryParams'] = 1;
+        query2['queryParams'] = 2;
         this.chatRoomAllowedUserService.query(query2).subscribe(
           (res2: HttpResponse<IChatRoomAllowedUser[]>) => {
             //                          console.log('CONSOLOG: M:myChatRooms & O: query2 : ', query2);
@@ -207,6 +218,67 @@ export class HomeComponent implements OnInit {
     //      console.log('CONSOLOG: M:sendMessage & O: this.chatMessage: ', this.chatMessage);
     this.chatService.sendMessage(this.chatMessage);
     this.message = '';
+    this.notifyCRAUs();
+  }
+
+  notifyCRAUs() {
+    //    console.log('CONSOLOG: M:fetchChatRoom & O: chatRoomId : ', chatRoomId);
+    const query = {};
+    query['chatRoomId.equals'] = this.chatMessage.chatRoomId;
+    query['chatUserId.equals'] = this.chatMessage.chatUserId;
+    query['message.equals'] = this.chatMessage.message;
+    query['queryParams'] = 3;
+    //    console.log('CONSOLOG: M:notifyCRAUs & O: query : ', query);
+    this.chatMessageService.query(query).subscribe(
+      (res: HttpResponse<IChatMessage[]>) => {
+        this.chatMessage = res.body[0];
+        //        console.log('CONSOLOG: M:fetchChatRoom & O: this.chatMessage : ', this.chatMessage);
+        const query2 = {};
+        query2['chatRoomId.equals'] = this.chatMessage.chatRoomId;
+        query2['queryParams'] = 1;
+        //        console.log('CONSOLOG: M:notifyCRAUs & O: query2 : ', query2);
+        this.chatRoomAllowedUserService.query(query2).subscribe(
+          (res2: HttpResponse<IChatRoomAllowedUser[]>) => {
+            this.notifyChatRoomAllowedUsers = res2.body;
+            //            console.log('CONSOLOG: M:notifyCRAUs & O: notifyChatRoomAllowedUsers : ', this.notifyChatRoomAllowedUsers);
+            if (this.notifyChatRoomAllowedUsers != null) {
+              const arrayChatRoomAllowedUsers = [];
+              this.notifyChatRoomAllowedUsers.forEach(chatRoomAllowedUser => {
+                this.chatNotification = new Object();
+                if (this.chatUser.id !== chatRoomAllowedUser.chatUserId) {
+                  //                    console.log('CONSOLOG: M:notifyCRAUs & O: IF this.chatUser.id : ', this.chatUser.id, 'chatRoomAllowedUser.chatUserId: ', chatRoomAllowedUser.chatUserId);
+                  this.chatNotification.chatUserId = chatRoomAllowedUser.chatUserId;
+                  this.chatNotification.chatMessageId = this.chatMessage.id;
+                  this.chatNotification.chatRoomId = this.chatMessage.chatRoomId;
+                  this.chatNotification.creationDate = moment(this.chatMessage.messageSentAt);
+                  //                    console.log('CONSOLOG: M:notifyCRAUs & O: this.chatNotification : ', this.chatNotification);
+                  this.subscribeToSaveResponse(this.chatNotificationService.create(this.chatNotification));
+                }
+              });
+              const query3 = {};
+              query3['id.equals'] = this.chatMessage.chatRoomId;
+              this.chatRoomService.query(query3).subscribe(
+                (res3: HttpResponse<IChatRoom[]>) => {
+                  this.chatRoom = res3.body[0];
+                  if (this.chatUser.id !== this.chatRoom.chatUserId) {
+                    //                      console.log('CONSOLOG: M:notifyCRAUs & O: IF this.chatRoom.chatUserId : ', this.chatRoom.chatUserId);
+                    this.chatNotification.chatUserId = this.chatRoom.chatUserId;
+                    this.chatNotification.chatMessageId = this.chatMessage.id;
+                    this.chatNotification.chatRoomId = this.chatMessage.chatRoomId;
+                    this.chatNotification.creationDate = moment(this.chatMessage.messageSentAt);
+                    //                      console.log('CONSOLOG: M:notifyCRAUs & O: this.chatNotification : ', this.chatNotification);
+                    this.subscribeToSaveResponse(this.chatNotificationService.create(this.chatNotification));
+                  }
+                },
+                (res3: HttpErrorResponse) => this.onError(res3.message)
+              );
+            }
+          },
+          (res2: HttpErrorResponse) => this.onError(res2.message)
+        );
+      },
+      (res: HttpErrorResponse) => this.onError(res.message)
+    );
   }
 
   loadAll() {}
@@ -217,12 +289,30 @@ export class HomeComponent implements OnInit {
     if (chatRoomId !== undefined) {
       const query = {};
       query['chatRoomId.equals'] = this.currentChatRoomId;
-      //      query['queryParams'] = 1;
+      query['queryParams'] = 1;
       //      console.log('CONSOLOG: M:fetchChatRoom & O: query : ', query);
       this.chatMessageService.query(query).subscribe(
         (res: HttpResponse<IChatMessage[]>) => {
           this.messages = res.body;
           //          console.log('CONSOLOG: M:fetchChatRoom & O: this.messages : ', this.messages);
+          const query2 = {};
+          query2['chatRoomId.equals'] = this.currentChatRoomId;
+          query2['chatUserId.equals'] = this.chatUser.id;
+          query2['queryParams'] = 2;
+          //          console.log('CONSOLOG: M:fetchChatRoom & O: query2 : ', query2);
+          this.chatNotificationService.query(query2).subscribe(
+            (res2: HttpResponse<IChatNotification[]>) => {
+              this.chatNotifications = res2.body;
+              //              console.log('CONSOLOG: M:fetchChatRoom & O: this.chatNotifications : ', this.chatNotifications);
+              if (this.chatNotifications) {
+                this.chatNotifications.forEach(chatNotification => {
+                  //                    console.log('CONSOLOG: M:fetchChatRoom & O: chatNotification : ', chatNotification);
+                  this.subscribeToSaveResponse(this.chatNotificationService.delete(chatNotification.id));
+                });
+              }
+            },
+            (res2: HttpErrorResponse) => this.onError(res2.message)
+          );
         },
         (res: HttpErrorResponse) => this.onError(res.message)
       );
@@ -246,6 +336,19 @@ export class HomeComponent implements OnInit {
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
     this.chatRooms = data;
     //    console.log('CONSOLOG: M:paginateChatRooms & O: this.chatRooms : ', this.chatRooms);
+  }
+
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IChatNotification>>) {
+    result.subscribe((res: HttpResponse<IChatNotification>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    //    this.isSaving = false;
+    //    this.previousState();
+  }
+
+  protected onSaveError() {
+    //    this.isSaving = false;
   }
 
   protected onError(errorMessage: string) {
