@@ -1,0 +1,41 @@
+{
+    "name": "OffensiveMessage",
+    "fields": [
+        {
+            "fieldName": "creationDate",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "isOffensive",
+            "fieldType": "Boolean"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "chatUser",
+            "otherEntityRelationshipName": "offensiveMessage",
+            "relationshipName": "chatUser",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "chatMessage",
+            "otherEntityRelationshipName": "offensiveMessage",
+            "relationshipName": "chatMessage",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190620084954",
+    "entityTableName": "offensive_message",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

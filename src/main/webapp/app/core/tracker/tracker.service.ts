@@ -4,6 +4,7 @@ import { Observable, Observer, Subscription } from 'rxjs';
 import { Location } from '@angular/common';
 
 import { CSRFService } from '../auth/csrf.service';
+import { WindowRef } from './window.service';
 import { AuthServerProvider } from '../auth/auth-jwt.service';
 
 import * as SockJS from 'sockjs-client';

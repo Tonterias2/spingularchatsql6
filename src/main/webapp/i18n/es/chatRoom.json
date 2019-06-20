@@ -1,0 +1,37 @@
+{
+  "spingularchatsql6App": {
+    "chatRoom": {
+      "home": {
+        "title": "Chat Rooms",
+        "createLabel": "Crear nuevo Chat Room",
+        "myLabel": "Mis Salas de Chat",
+        "createOrEditLabel": "Crear o editar Chat Room",
+        "search": "Buscar una Sala de Chat",
+        "notFound": "No Chat Room found"
+      },
+      "created": "Un nuevo Chat Room ha sido creado con el identificador {{ param }}",
+      "updated": "Un Chat Room ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Chat Room ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Chat Room {{ id }}?"
+      },
+      "detail": {
+        "title": "Chat Room"
+      },
+      "creationDate": "Creation Date",
+      "roomName": "Room Name",
+      "roomDescription": "Room Description",
+      "participants": "Participantes",
+      "privateRoom": "Private Room",
+      "image": "Image",
+      "chatMessage": "Chat Message",
+      "chatRoomAllowedUser": "Chat Room Allowed User",
+      "chatNotification": "Chat Notification",
+      "join": "Unirse",
+      "leave": "Abandonar",
+      "ban": "Expulsar Usuario",
+      "allow": "Admitir Usuario",
+      "chatUser": "Chat User"
+    }
+  }
+}

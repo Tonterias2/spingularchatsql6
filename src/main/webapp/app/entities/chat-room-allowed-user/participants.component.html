@@ -1,0 +1,106 @@
+<div>
+    <h2 id="page-heading">
+    	<span jhiTranslate="spingularchatsql6App.chatRoom.home.title">Chat Rooms</span>
+	    <button *ngIf="isParticipant === false && loggedChatUserOwns === false" style="margin:5px;" id="jh-my-entity" class="btn btn-outline-primary float-right jh-create-entity create-blog" (click)="joinCR()">
+	        <span jhiTranslate="spingularchatsql6App.chatRoom.join">
+	        Join
+	        </span>
+	    </button>
+	    <button *ngIf="isParticipant === true  && loggedChatUserOwns === false" style="margin:5px;" id="jh-my-entity" class="btn btn-primary float-right jh-create-entity create-blog" (click)="leaveCR()">
+	        <span jhiTranslate="spingularchatsql6App.chatRoom.leave">
+	        Leave
+	        </span>
+	    </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+
+    <div class="table-responsive" *ngIf="chatRooms">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="creationDate"><span jhiTranslate="spingularchatsql6App.chatRoom.creationDate">Creation Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="roomName"><span jhiTranslate="spingularchatsql6App.chatRoom.roomName">Room Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="roomDescription"><span jhiTranslate="spingularchatsql6App.chatRoom.roomDescription">Room Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="privateRoom"><span jhiTranslate="spingularchatsql6App.chatRoom.privateRoom">Private Room</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="chatUserId"><span jhiTranslate="spingularchatsql6App.chatRoom.chatUser">Chat User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let chatRoom of chatRooms ;trackBy: trackId">
+                <td><a [routerLink]="['/chat-room', chatRoom.id, 'view' ]">{{chatRoom.id}}</a></td>
+                <td>{{chatRoom.creationDate | date:'medium'}}</td>
+                <td>{{chatRoom.roomName}}</td>
+                <td>{{chatRoom.roomDescription}}</td>
+                <td>{{chatRoom.privateRoom}}</td>
+                <td>
+                    <div *ngIf="chatRoom.chatUserId">
+                        <a [routerLink]="['/chat-user', chatRoom.chatUserId , 'view' ]" >{{chatRoom.chatUserId}}</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br/>
+    <h2 id="page-heading">
+        <span jhiTranslate="spingularchatsql6App.chatRoomAllowedUser.home.title">Chat Room Allowed Users</span>
+    </h2>
+    <div class="table-responsive" *ngIf="chatRoomAllowedUsers">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="creationDate"><span jhiTranslate="spingularchatsql6App.chatRoomAllowedUser.creationDate">Creation Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="bannedUser"><span jhiTranslate="spingularchatsql6App.chatRoomAllowedUser.bannedUser">Banned User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="bannedDate"><span jhiTranslate="spingularchatsql6App.chatRoomAllowedUser.bannedDate">Banned Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="chatRoomId"><span jhiTranslate="spingularchatsql6App.chatRoomAllowedUser.chatRoom">Chat Room</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="chatUserId"><span jhiTranslate="spingularchatsql6App.chatRoomAllowedUser.chatUser">Chat User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let chatRoomAllowedUser of chatRoomAllowedUsers ;trackBy: trackId">
+                <td><a [routerLink]="['/chat-room-allowed-user', chatRoomAllowedUser.id, 'view' ]">{{chatRoomAllowedUser.id}}</a></td>
+                <td>{{chatRoomAllowedUser.creationDate | date:'medium'}}</td>
+                <td>{{chatRoomAllowedUser.bannedUser}}</td>
+                <td>{{chatRoomAllowedUser.bannedDate | date:'medium'}}</td>
+                <!--<td>
+                    <div *ngIf="chatRoomAllowedUser.chatRoomId">
+                        <a [routerLink]="['../chat-room', chatRoomAllowedUser.chatRoomId , 'view' ]" >{{chatRoomAllowedUser.chatRoomId}}</a>
+                    </div>
+                </td>  -->
+                <td>
+                    <div *ngIf="chatRoomAllowedUser.chatUserId">
+                        <a [routerLink]="['/chat-user', chatRoomAllowedUser.chatUserId , 'view' ]" >{{chatRoomAllowedUser.chatUserId}}</a>
+                    </div>
+                </td>
+				<td class="text-right">
+				    <div *ngIf="loggedChatUserOwns === true">
+					    <button *ngIf="chatRoomAllowedUser.bannedUser === false && chatUser.userId != chatRoomAllowedUser.chatUserId" style="margin:5px;" id="jh-my-entity" class="btn btn-outline-primary float-right jh-create-entity create-blog" (click)="banUser(chatRoomAllowedUser.id)">
+					        <span jhiTranslate="spingularchatsql6App.chatRoom.ban">
+					        Ban User
+					        </span>
+					    </button>
+					    <button *ngIf="chatRoomAllowedUser.bannedUser === true && chatUser.userId != chatRoomAllowedUser.chatUserId" style="margin:5px;" id="jh-my-entity" class="btn btn-primary float-right jh-create-entity create-blog" (click)="allowUser(chatRoomAllowedUser.id)">
+					        <span jhiTranslate="spingularchatsql6App.chatRoom.allow">
+					        Allow User
+					        </span>
+					    </button>
+					  </div>
+				</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="chatRoomAllowedUsers && chatRoomAllowedUsers.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>
