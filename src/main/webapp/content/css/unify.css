@@ -21663,27 +21663,27 @@ li:last-child .u-dot-line-v2-2::after {
 }
 
 .u-marker-bg-primary {
-  background-image: url(../images/img/bg/marker/marker-bg-primary.png);
+  background-image: url(../../content/images/img/bg/marker/marker-bg-primary.png);
 }
 
 .u-marker-bg-green {
-  background-image: url(../images/img/bg/marker/marker-bg-green.png);
+  background-image: url(../../content/images/img/bg/marker/marker-bg-green.png);
 }
 
 .u-marker-bg-black {
-  background-image: url(../images/img/bg/marker/marker-bg-black.png);
+  background-image: url(../../content/images/img/bg/marker/marker-bg-black.png);
 }
 
 .u-marker-bg-white {
-  background-image: url(../images/img/bg/marker/marker-bg-white.png);
+  background-image: url(../../content/images/img/bg/marker/marker-bg-white.png);
 }
 
 .u-marker-bg-red {
-  background-image: url(../images/img/bg/marker/marker-bg-red.png);
+  background-image: url(../../content/images/img/bg/marker/marker-bg-red.png);
 }
 
 .u-marker-bg-yellow {
-  background-image: url(../images/img/bg/marker/marker-bg-yellow.png);
+  background-image: url(../../content/images/img/bg/marker/marker-bg-yellow.png);
 }
 
 /*------------------------------------
@@ -28467,7 +28467,7 @@ pre[class*='language-'] .toolbar-item a {
 }
 
 .js-carousel {
-  background: url(../images/img/preloaders/preloader-black.svg) no-repeat 50% 50%;
+  background: url(../../content/images/img/preloaders/preloader-black.svg) no-repeat 50% 50%;
 }
 
 .js-carousel .js-next,
@@ -30145,31 +30145,31 @@ pre[class*='language-'] .toolbar-item a {
   Images Grid
 ------------------------------------*/
 .g-bg-grid-v1--before::before {
-  background-image: url(../images/img/bg/grid/wave.png);
+  background-image: url(../../content/images/img/bg/grid/wave.png);
 }
 
 .g-bg-grid-v2--before::after {
-  background-image: url(../images/img/bg/grid/tile-left.png);
+  background-image: url(../../content/images/img/bg/grid/tile-left.png);
 }
 
 .g-bg-grid-v3--before::after {
-  background-image: url(../images/img/bg/grid/tile-right.png);
+  background-image: url(../../content/images/img/bg/grid/tile-right.png);
 }
 
 .g-bg-grid-v4--before::after {
-  background-image: url(../images/img/bg/grid/diagonal-left.png);
+  background-image: url(../../content/images/img/bg/grid/diagonal-left.png);
 }
 
 .g-bg-grid-v5--before::after {
-  background-image: url(../images/img/bg/grid/diagonal-right.png);
+  background-image: url(../../content/images/img/bg/grid/diagonal-right.png);
 }
 
 .g-bg-grid-v6--before::after {
-  background-image: url(../images/img/bg/grid/zigzag-left.png);
+  background-image: url(../../content/images/img/bg/grid/zigzag-left.png);
 }
 
 .g-bg-grid-v7--before::after {
-  background-image: url(../images/img/bg/grid/zigzag-right.png);
+  background-image: url(../../content/images/img/bg/grid/zigzag-right.png);
 }
 
 /*------------------------------------
@@ -30214,7 +30214,7 @@ pre[class*='language-'] .toolbar-item a {
   Background Patterns
 ------------------------------------*/
 .g-bg-pattern-green {
-  background-image: url('../images/img/bg/pattern--green.png');
+  background-image: url('../../content/images/img/bg/pattern--green.png');
 }
 
 /*------------------------------------

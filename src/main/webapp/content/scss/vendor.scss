@@ -8,4 +8,21 @@ eg $input-color: red;
 // Import Bootstrap source files from node_modules
 @import '~bootstrap/scss/bootstrap';
 
+@import '~font-awesome/css/font-awesome.css';
+@import '~font-awesome/css/font-awesome.min.css';
+@import '~simple-line-icons/css/simple-line-icons.css';
+@import '~et-line/style.css';
+@import '~animate.css/animate.css';
+@import '~hamburgers/dist/hamburgers.css';
+@import '~bootstrap-select/sass/bootstrap-select';
+@import '~chartist/dist/chartist.css';
+
+@import '../../content/css/custom.css';
+@import '../../content/vendor/icon-hs/style.css';
+@import '../../content/vendor/icon-line-pro/style.css';
+@import '../../content/vendor/hs-admin-icons/hs-admin-icons.css';
+
+@import '../../content/css/unify.css';
+@import '../../content/css/unify-admin.css';
+
 /* jhipster-needle-scss-add-vendor JHipster will add new css style */
