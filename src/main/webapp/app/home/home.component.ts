@@ -30,6 +30,9 @@ import { ChatRoomAllowedUserService } from '../entities/chat-room-allowed-user/c
 import { IChatNotification, ChatNotification } from 'app/shared/model/chat-notification.model';
 import { ChatNotificationService } from '../entities/chat-notification/chat-notification.service';
 
+import { IOffensiveMessage } from 'app/shared/model/offensive-message.model';
+import { OffensiveMessageService } from '../entities/offensive-message/offensive-message.service';
+
 @Component({
   selector: 'jhi-home',
   templateUrl: './home.component.html',
@@ -51,6 +54,8 @@ export class HomeComponent implements OnInit {
   notifyChatRoomAllowedUsers: IChatRoomAllowedUser[];
   chatNotifications: IChatNotification[];
   chatNotification: IChatNotification;
+  offensiveMessages: IOffensiveMessage[];
+  offensiveMessaged: IOffensiveMessage;
 
   currentAccount: any;
   error: any;
@@ -80,6 +85,7 @@ export class HomeComponent implements OnInit {
     protected chatUserService: ChatUserService,
     protected chatRoomAllowedUserService: ChatRoomAllowedUserService,
     protected chatNotificationService: ChatNotificationService,
+    protected offensiveMessageService: OffensiveMessageService,
     protected parseLinks: JhiParseLinks,
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -294,7 +300,7 @@ export class HomeComponent implements OnInit {
       this.chatMessageService.query(query).subscribe(
         (res: HttpResponse<IChatMessage[]>) => {
           this.messages = res.body;
-          //          console.log('CONSOLOG: M:fetchChatRoom & O: this.messages : ', this.messages);
+          console.log('CONSOLOG: M:fetchChatRoom & O: this.messages : ', this.messages);
           const query2 = {};
           query2['chatRoomId.equals'] = this.currentChatRoomId;
           query2['chatUserId.equals'] = this.chatUser.id;
@@ -317,6 +323,37 @@ export class HomeComponent implements OnInit {
         (res: HttpErrorResponse) => this.onError(res.message)
       );
     }
+  }
+
+  offensiveMessage(messageId) {
+    //    console.log('CONSOLOG: M:offensiveMessage & O: messageId : ', messageId);
+    this.offensiveMessaged = new Object();
+    this.offensiveMessaged.creationDate = moment(moment().format('YYYY-MM-DDTHH:mm'), 'YYYY-MM-DDTHH:mm');
+    this.offensiveMessaged.isOffensive = true;
+    this.offensiveMessaged.chatUserId = this.chatUser.id;
+    this.offensiveMessaged.chatMessageId = messageId;
+    //    console.log('CONSOLOG: M:offensiveMessage & O: this.offensiveMessaged : ', this.offensiveMessaged);
+    this.subscribeToSaveResponse(this.offensiveMessageService.create(this.offensiveMessaged));
+    // tengo que crear un offensive message y luego si vuelven a hacer clic quitarlo
+  }
+
+  discardOffensiveMessage(messageId) {
+    const query = {};
+    if (this.currentAccount.id != null) {
+      query['chatUserId.equals'] = this.chatUser.id;
+      query['chatMessageId.equals'] = messageId;
+      query['queryParams'] = 2;
+    }
+    this.offensiveMessageService.query(query).subscribe(
+      (res: HttpResponse<IOffensiveMessage[]>) => {
+        this.offensiveMessaged = res.body[0];
+        //        console.log('CONSOLOG: M:offensiveMessage & O: this.offensiveMessaged : ', this.offensiveMessaged);
+        if (this.offensiveMessaged) {
+          this.subscribeToSaveResponse(this.offensiveMessageService.delete(this.offensiveMessaged.id));
+        }
+      },
+      (res: HttpErrorResponse) => this.onError(res.message)
+    );
   }
 
   registerChangeInChatRooms() {
