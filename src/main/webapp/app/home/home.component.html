@@ -1,16 +1,7 @@
 <div class="row">
     <div [ngSwitch]="isAuthenticated()" class="col">
         <div *ngSwitchCase="true" class="col g-ml-45 g-ml-0--lg g-pb-65--md">
-            <!-- Breadcrumb-v1 
-            <div class="g-hidden-sm-down g-bg-gray-light-v8 g-pa-20">
-                <ul class="u-list-inline g-color-gray-dark-v6">
-                    <li class="list-inline-item">
-                        <span class="g-valign-middle">Chat</span>
-                    </li>
-                </ul>
-            </div>
-            End Breadcrumb-v1 -->
-
+        
 
             <div class="g-pa-20">
                 <h1 class="g-font-weight-300 g-font-size-28 g-color-black g-mb-30">Chat</h1>
@@ -22,20 +13,53 @@
                                 <!-- Chat Search -->
                                 <form action="#">
                                     <div class="input-group g-pos-rel g-height-50 g-height-80--lg">
-                                        <input class="form-control form-control-md g-brd-none p-0 g-pr-40" type="text"
-                                               placeholder="Search for contacts">
+                                        <input name="search" class="form-control form-control-md g-brd-none p-0 g-pr-40" type="text"
+                                               placeholder="Search for contacts" [(ngModel)]="searchtext" > 
                                         <button type="submit"
-                                                class="btn rounded-0 u-btn-outline-primary g-brd-none g-bg-transparent--hover g-pos-abs g-top-0 g-right-0 d-flex g-width-40 h-100 align-items-center justify-content-center g-font-size-18 g-z-index-2 g-color-primary">
+                                                class="btn rounded-0 u-btn-outline-primary g-brd-none g-bg-transparent--hover g-pos-abs g-top-0 g-right-0 d-flex g-width-40 h-100 align-items-center justify-content-center g-font-size-18 g-z-index-2 g-color-primary" (click)="searchcontact()"></button> 
                                             <i class="hs-admin-search"></i>
                                         </button>
                                     </div>
                                 </form>
                                 <!-- End Chat Search -->
                             </header>
+                            
 
                             <div class="g-height-59_5vh--lg jh-chat-box-scroll">
                                 <!-- Chat List -->
                                 
+                                <div *ngFor="let user of users ;trackBy: trackId" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
+                                    <!-- Chat List Item: typing -->
+                                    <div>
+                                    <section
+                                            class="media justify-content-center g-bg-gray-light-v8--active g-brd-bottom--lg g-brd-gray-light-v4 g-pa-15 g-pa-25--lg">
+                                        <!-- Chat List Item: Avatar -->
+                                        <div class="d-flex g-mr-20--lg">
+                                        <span class="d-inline-block g-pos-rel">
+                                        <span class="u-badge-v2--md u-badge--bottom-right g-bg-teal-v2 g-mb-8 g-mr-8"></span>
+                                        <img class="rounded-circle g-width-45 g-width-55--lg g-height-45 g-height-55--lg"
+                                   src="../../content/images/img-temp/200x200/img2.jpg" alt="Image Description">
+                                      </span>
+                                        </div>
+                                        <!-- End Chat List Item: Avatar -->
+                                          
+                                        <div class="media-body align-self-center g-hidden-md-down" >
+                                                 
+                                            <div  class  ="media g-mb-10">
+                                                <!-- Chat List Item: Name -->
+                                                <h3 class="d-flex align-self-center g-font-size-16 g-font-weight-400 mb-0" >{{user}}
+                                                        </h3>
+                                             
+                                            </div>
+                                       </div>
+                                    </section>
+                                    <!-- End Chat List Item: typing -->
+                                </div>
+
+
+
+                                </div>
+
                                 <div *ngFor="let chatRoom of chatRooms ;trackBy: trackId" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
                                     <!-- Chat List Item: typing -->
                                     <div (click)="fetchChatRoom(chatRoom.id)">
@@ -43,11 +67,11 @@
                                             class="media justify-content-center g-bg-gray-light-v8--active g-brd-bottom--lg g-brd-gray-light-v4 g-pa-15 g-pa-25--lg">
                                         <!-- Chat List Item: Avatar -->
                                         <div class="d-flex g-mr-20--lg">
-                              <span class="d-inline-block g-pos-rel">
-                              <span class="u-badge-v2--md u-badge--bottom-right g-bg-teal-v2 g-mb-8 g-mr-8"></span>
-                              <img class="rounded-circle g-width-45 g-width-55--lg g-height-45 g-height-55--lg"
+                                        <span class="d-inline-block g-pos-rel">
+                                        <span class="u-badge-v2--md u-badge--bottom-right g-bg-teal-v2 g-mb-8 g-mr-8"></span>
+                                        <img class="rounded-circle g-width-45 g-width-55--lg g-height-45 g-height-55--lg"
                                    src="../../content/images/img-temp/200x200/img2.jpg" alt="Image Description">
-                              </span>
+                                      </span>
                                         </div>
                                         <!-- End Chat List Item: Avatar -->
                                           
@@ -211,6 +235,8 @@
                                                 <p class="mb-0">{{message.message}}</p>
                                             </div>
                                         </div>
+                                        <i class="hs-admin-more-alt" (click)="offensiveMessage(message.id)"></i> !
+                                        <i class="hs-admin-more-alt" (click)="discardOffensiveMessage(message.id)"></i>
                                         <!-- End Chat. Message Area. Message. Body. -->
                                     </div>
 
