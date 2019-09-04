@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ChatService } from '../shared';
 
-import { LoginModalService, AccountService, Account } from 'app/core';
+import { LoginModalService, AccountService, Account, UserService } from 'app/core';
 
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -32,6 +32,10 @@ import { ChatNotificationService } from '../entities/chat-notification/chat-noti
 
 import { IOffensiveMessage } from 'app/shared/model/offensive-message.model';
 import { OffensiveMessageService } from '../entities/offensive-message/offensive-message.service';
+import { ContactModalComponent } from 'app/contact-modal/contact-modal.component';
+import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrier';
+import { threadId } from 'worker_threads';
+import { objectExpression } from '@babel/types';
 
 @Component({
   selector: 'jhi-home',
@@ -43,7 +47,7 @@ export class HomeComponent implements OnInit {
   modalRef: NgbModalRef;
   messages: Array<Object> = [];
   message = '';
-
+  users: Array<Object> = [];
   chatMessage: IChatMessage;
   chatMessages: IChatMessage[];
   chatUser: IChatUser;
@@ -71,6 +75,7 @@ export class HomeComponent implements OnInit {
   reverse: any;
 
   currentChatRoomId: number;
+  searchtext: String;
 
   arrayAux = [];
   arrayIds = [];
@@ -89,7 +94,8 @@ export class HomeComponent implements OnInit {
     protected parseLinks: JhiParseLinks,
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
-    protected router: Router
+    protected router: Router,
+    protected modal: ContactModalComponent
   ) {}
 
   ngOnInit() {
@@ -390,5 +396,15 @@ export class HomeComponent implements OnInit {
 
   protected onError(errorMessage: string) {
     this.jhiAlertService.error(errorMessage, null, null);
+  }
+
+  protected searchcontact() {
+    this.users = [];
+    this.modal.initialize(this.searchtext);
+    if (this.modal.users) {
+      this.modal.users.forEach(obj => {
+        this.users.push(obj.login);
+      });
+    }
   }
 }

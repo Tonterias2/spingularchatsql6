@@ -150,6 +150,21 @@ public class UserResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
+    
+    /**
+     * {@code GET /userlist} : get all users.
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
+     */
+    
+    @GetMapping("/users/searchuser")
+    @ResponseBody
+    public List<User> getAllUserName(@RequestParam("searchkeyword") String key) {
+         List<User> page = userService.getSearchList(key);
+//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
+        return page;
+    }
 
     /**
      * Gets a list of all roles.
