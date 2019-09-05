@@ -1,119 +1,127 @@
 <div class="row">
     <div [ngSwitch]="isAuthenticated()" class="col">
         <div *ngSwitchCase="true" class="col g-ml-45 g-ml-0--lg g-pb-65--md">
-        
+
 
             <div class="g-pa-20">
                 <h1 class="g-font-weight-300 g-font-size-28 g-color-black g-mb-30">Chat</h1>
 
-                <div class="card"> 
-                    <div class="row no-gutters" >
-                        <div class="col-lg-5 w-100 g-brd-right--lg g-brd-gray-light-v7 ">
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-lg-5 w-100 g-brd-right--lg g-brd-gray-light-v7">
                             <header class="g-brd-bottom g-brd-gray-light-v4 g-px-15 g-px-25--lg">
                                 <!-- Chat Search -->
                                 <form action="#">
                                     <div class="input-group g-pos-rel g-height-50 g-height-80--lg">
-                                        <input name="search" class="form-control form-control-md g-brd-none p-0 g-pr-40" type="text"
-                                               placeholder="Search for contacts" [(ngModel)]="searchtext" > 
-                                        <button type="submit"
-                                                class="btn rounded-0 u-btn-outline-primary g-brd-none g-bg-transparent--hover g-pos-abs g-top-0 g-right-0 d-flex g-width-40 h-100 align-items-center justify-content-center g-font-size-18 g-z-index-2 g-color-primary" (click)="searchcontact()"></button> 
+                                        <input name="search" [(ngModel)]="searchtext"
+                                               class="form-control form-control-md g-brd-none p-0 g-pr-40" type="text"
+                                               placeholder="Search for contacts" />
+                                        <button
+                                            type="submit"
+                                            (click)="searchcontact()"
+                                            class="btn rounded-0 u-btn-outline-primary g-brd-none g-bg-transparent--hover
+                                                    g-pos-abs g-top-0 g-right-0 d-flex g-width-40 h-100 align-items-center
+                                                    justify-content-center g-font-size-18 g-z-index-2 g-color-primary">
                                             <i class="hs-admin-search"></i>
                                         </button>
                                     </div>
                                 </form>
                                 <!-- End Chat Search -->
                             </header>
-                            
+
 
                             <div class="g-height-59_5vh--lg jh-chat-box-scroll">
                                 <!-- Chat List -->
-                                
-                                <div *ngFor="let user of users" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
-                                <!-- <div *ngFor="let user of users ;trackBy: trackId" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto"> DELETE IT -->
+
+                                <div *ngFor="let user of users"
+                                     class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
+                                    <!-- <div *ngFor="let user of users ;trackBy: trackId" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto"> DELETE IT -->
                                     <!-- Chat List Item: typing -->
                                     <div>
-                                    <section
+                                        <section
                                             class="media justify-content-center g-bg-gray-light-v8--active g-brd-bottom--lg g-brd-gray-light-v4 g-pa-15 g-pa-25--lg">
-                                        <!-- Chat List Item: Avatar -->
-                                        <div class="d-flex g-mr-20--lg">
-                                        <span class="d-inline-block g-pos-rel">
-                                        <span class="u-badge-v2--md u-badge--bottom-right g-bg-teal-v2 g-mb-8 g-mr-8"></span>
-                                        <img class="rounded-circle g-width-45 g-width-55--lg g-height-45 g-height-55--lg"
-                                   src="../../content/images/img-temp/200x200/img2.jpg" alt="Image Description">
-                                      </span>
-                                        </div>
-                                        <!-- End Chat List Item: Avatar -->
-                                          
-                                        <div class="media-body align-self-center g-hidden-md-down" >
-                                                 
-                                            <div  class  ="media g-mb-10">
-                                                <!-- Chat List Item: Name -->
-                                                <h3 class="d-flex align-self-center g-font-size-16 g-font-weight-400 mb-0" >{{user}}
-                                                        </h3>
-                                             
+                                            <!-- Chat List Item: Avatar -->
+                                            <div class="d-flex g-mr-20--lg">
+                                            <span class="d-inline-block g-pos-rel">
+                                            <span
+                                                class="u-badge-v2--md u-badge--bottom-right g-bg-teal-v2 g-mb-8 g-mr-8"></span>
+                                            <img
+                                                class="rounded-circle g-width-45 g-width-55--lg g-height-45 g-height-55--lg"
+                                                src="../../content/images/img-temp/200x200/img2.jpg"
+                                                alt="Image Description">
+                                          </span>
                                             </div>
-                                       </div>
-                                    </section>
-                                    <!-- End Chat List Item: typing -->
+                                            <!-- End Chat List Item: Avatar -->
+
+                                            <div class="media-body align-self-center g-hidden-md-down">
+
+                                                <div class="media g-mb-10">
+                                                    <!-- Chat List Item: Name -->
+                                                    <h3 class="d-flex align-self-center g-font-size-16 g-font-weight-400 mb-0">{{user}}
+                                                    </h3>
+
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <!-- End Chat List Item: typing -->
+                                    </div>
                                 </div>
 
-
-
-                                </div>
-
-                                <div *ngFor="let chatRoom of chatRooms" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
-                                <!-- <div *ngFor="let chatRoom of chatRooms ;trackBy: trackId" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto"> DELETE IT -->
+                                <div *ngFor="let chatRoom of chatRooms"
+                                     class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
+                                    <!-- <div *ngFor="let chatRoom of chatRooms ;trackBy: trackId" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto"> DELETE IT -->
                                     <!-- Chat List Item: typing -->
                                     <div (click)="fetchChatRoom(chatRoom.id)">
-                                    <section
+                                        <section
                                             class="media justify-content-center g-bg-gray-light-v8--active g-brd-bottom--lg g-brd-gray-light-v4 g-pa-15 g-pa-25--lg">
-                                        <!-- Chat List Item: Avatar -->
-                                        <div class="d-flex g-mr-20--lg">
+                                            <!-- Chat List Item: Avatar -->
+                                            <div class="d-flex g-mr-20--lg">
                                         <span class="d-inline-block g-pos-rel">
-                                        <span class="u-badge-v2--md u-badge--bottom-right g-bg-teal-v2 g-mb-8 g-mr-8"></span>
-                                        <img class="rounded-circle g-width-45 g-width-55--lg g-height-45 g-height-55--lg"
-                                   src="../../content/images/img-temp/200x200/img2.jpg" alt="Image Description">
+                                        <span
+                                            class="u-badge-v2--md u-badge--bottom-right g-bg-teal-v2 g-mb-8 g-mr-8"></span>
+                                        <img
+                                            class="rounded-circle g-width-45 g-width-55--lg g-height-45 g-height-55--lg"
+                                            src="../../content/images/img-temp/200x200/img2.jpg"
+                                            alt="Image Description">
                                       </span>
-                                        </div>
-                                        <!-- End Chat List Item: Avatar -->
-                                          
-                                        <div class="media-body align-self-center g-hidden-md-down" >
-                                                 
-                                            <div  class  ="media g-mb-10">
-                                                <!-- Chat List Item: Name -->
-                                                <h3 class="d-flex align-self-center g-font-size-16 g-font-weight-400 mb-0" >{{chatRoom.roomName}}
-                                                        </h3>
-                                                <!-- End Chat List Item: Name -->
-
-                                                <!-- Chat List Item: Time -->
-                                                <em class="d-flex align-self-center align-items-center g-font-style-normal g-color-gray-light-v1 ml-auto">
-                                                    <i class="hs-admin-time icon-clock g-mr-5"></i>
-                                                    <small>11:49 PM</small>
-                                                </em>
-                                                <!-- End Chat List Item: Time -->
                                             </div>
+                                            <!-- End Chat List Item: Avatar -->
 
-                                            <div class="media">
-                                                <div class="d-flex align-self-center g-mr-15">
-                                                    <img src="../../content/images/typing.gif" alt="Typing">
-                                                </div>
-                                                <p class="media-body align-self-center mb-0">Typing…</p>
+                                            <div class="media-body align-self-center g-hidden-md-down">
 
-                                                <!-- Chat List Item: Unread Messages -->
-                                                <div class="d-flex align-self-center justify-content-center g-min-width-35 g-bg-lightblue-v5 g-font-size-12 g-color-white g-rounded-15 g-px-8 g-py-1 ml-auto">
-                                                    5
+                                                <div class="media g-mb-10">
+                                                    <!-- Chat List Item: Name -->
+                                                    <h3 class="d-flex align-self-center g-font-size-16 g-font-weight-400 mb-0">{{chatRoom.roomName}}
+                                                    </h3>
+                                                    <!-- End Chat List Item: Name -->
+
+                                                    <!-- Chat List Item: Time -->
+                                                    <em class="d-flex align-self-center align-items-center g-font-style-normal g-color-gray-light-v1 ml-auto">
+                                                        <i class="hs-admin-time icon-clock g-mr-5"></i>
+                                                        <small>11:49 PM</small>
+                                                    </em>
+                                                    <!-- End Chat List Item: Time -->
                                                 </div>
-                                                <!-- End Chat List Item: Unread Messages -->
-                                            
+
+                                                <div class="media">
+                                                    <div class="d-flex align-self-center g-mr-15">
+                                                        <img src="../../content/images/typing.gif" alt="Typing">
+                                                    </div>
+                                                    <p class="media-body align-self-center mb-0">Typing…</p>
+
+                                                    <!-- Chat List Item: Unread Messages -->
+                                                    <div
+                                                        class="d-flex align-self-center justify-content-center g-min-width-35 g-bg-lightblue-v5 g-font-size-12 g-color-white g-rounded-15 g-px-8 g-py-1 ml-auto">
+                                                        5
+                                                    </div>
+                                                    <!-- End Chat List Item: Unread Messages -->
+
+                                                </div>
+
                                             </div>
-
-                                       </div>
-                                    </section>
-                                    <!-- End Chat List Item: typing -->
-                                </div>
-
-
-
+                                        </section>
+                                        <!-- End Chat List Item: typing -->
+                                    </div>
                                 </div>
                                 <!-- End Chat List -->
                             </div>
@@ -125,7 +133,8 @@
                             <!-- Chat. Message Area. Header. -->
                             <header class="g-px-15 g-px-25--lg">
                                 <div class="media g-height-50 g-height-80--lg">
-                                    <div class="d-flex align-self-center g-width-100--sm g-line-height-1_2 g-font-size-default g-pos-rel">
+                                    <div
+                                        class="d-flex align-self-center g-width-100--sm g-line-height-1_2 g-font-size-default g-pos-rel">
                                         <!-- Chat. Message Area. Search -->
                                         <a href="#!"
                                            class="u-link-v5 g-font-size-16 g-color-gray-light-v6 g-color-secondary--hover g-mr-15--sm"
@@ -140,10 +149,12 @@
                                         <form id="chat-searchform-1"
                                               class="u-searchform-v1--align-left u-dropdown--css-animation u-dropdown--hidden g-box-shadow-none g-mt-5">
                                             <div class="input-group g-pos-rel g-max-width-380">
-                                                <input class="form-control g-font-size-default g-brd-gray-light-v7 g-brd-lightblue-v3--focus g-rounded-20 g-pl-20 g-pr-50 g-py-10"
-                                                       placeholder="Enter Your Search Here..." type="text">
-                                                <button class="btn g-pos-abs g-top-0 g-right-0 g-z-index-2 g-width-60 h-100 g-bg-transparent g-font-size-16 g-color-lightred-v2 g-color-lightblue-v3--hover rounded-0"
-                                                        type="submit">
+                                                <input
+                                                    class="form-control g-font-size-default g-brd-gray-light-v7 g-brd-lightblue-v3--focus g-rounded-20 g-pl-20 g-pr-50 g-py-10"
+                                                    placeholder="Enter Your Search Here..." type="text">
+                                                <button
+                                                    class="btn g-pos-abs g-top-0 g-right-0 g-z-index-2 g-width-60 h-100 g-bg-transparent g-font-size-16 g-color-lightred-v2 g-color-lightblue-v3--hover rounded-0"
+                                                    type="submit">
                                                     <i class="hs-admin-search g-absolute-centered"></i>
                                                 </button>
                                             </div>
@@ -154,13 +165,15 @@
                                         <a class="g-color-gray-dark-v6 g-hidden-sm-down" href="#!">History</a>
                                     </div>
 
-                                    <div class="media-body d-flex align-self-center justify-content-center g-font-size-16--md g-color-black">
+                                    <div
+                                        class="media-body d-flex align-self-center justify-content-center g-font-size-16--md g-color-black">
                                         <a class="g-color-black" href="#!">I<span class="g-hidden-sm-up">.</span><span
-                                                class="g-hidden-sm-down">saac&nbsp;</span>
+                                            class="g-hidden-sm-down">saac&nbsp;</span>
                                             McDonald</a>
                                     </div>
 
-                                    <div class="d-flex align-self-center align-items-center justify-content-end g-width-100--sm">
+                                    <div
+                                        class="d-flex align-self-center align-items-center justify-content-end g-width-100--sm">
                                         <a class="u-link-v5 g-line-height-1 g-font-size-20 g-color-gray-light-v6 g-color-lightblue-v3--hover"
                                            href="#!">
                                             <i class="hs-admin-video-camera"></i>
@@ -217,78 +230,85 @@
                             <!-- End Chat. Message Area. Header. -->
 
                             <hr class="d-flex g-brd-gray-light-v7 g-mx-15 g-mx-25--lg my-0">
-                            
+
                             <!-- Chat. Message Area. Messages. -->
-                            <div   class="jh-chat-box-scroll g-height-50vh--lg g-pa-15 g-pa-25--lg">
+                            <div class="jh-chat-box-scroll g-height-50vh--lg g-pa-15 g-pa-25--lg">
                                 <div *ngFor="let message of messages">
-                                <!-- Chat. Message Area. Message (From). -->
-                                <section class="g-mb-30">
-                                    <div class="media g-mb-12">
-                                        <!-- Chat. Message Area. Message. Avatar. -->
-                                        <div class="d-flex align-self-end g-mr-12">
-                                            <img class="rounded-circle g-width-36 g-height-36"
-                                                 src="../../content/images/img-temp/200x200/img2.jpg" alt="Image Description">
-                                        </div>
-                                        <!-- End Chat. Message Area. Message. Avatar. -->
-
-                                        <!-- Chat. Message Area. Message. Body. -->
-                                        <div class="media-body">
-                                            <div class="d-inline-block g-width-170 g-width-auto--sm g-bg-gray-light-v8 g-font-size-12 g-font-size-default--lg g-color-gray-dark-v6 g-rounded-10 g-pa-10-15">
-                                                <p class="mb-0">{{message.message}}</p>
+                                    <!-- Chat. Message Area. Message (From). -->
+                                    <section class="g-mb-30">
+                                        <div class="media g-mb-12">
+                                            <!-- Chat. Message Area. Message. Avatar. -->
+                                            <div class="d-flex align-self-end g-mr-12">
+                                                <img class="rounded-circle g-width-36 g-height-36"
+                                                     src="../../content/images/img-temp/200x200/img2.jpg"
+                                                     alt="Image Description">
                                             </div>
-                                        </div>
-                                        <i class="hs-admin-more-alt" (click)="offensiveMessage(message.id)"></i> !
-                                        <i class="hs-admin-more-alt" (click)="discardOffensiveMessage(message.id)"></i>
-                                        <!-- End Chat. Message Area. Message. Body. -->
-                                    </div>
+                                            <!-- End Chat. Message Area. Message. Avatar. -->
 
-                                    <!-- Chat. Message Area. Message Time -->
-                                    <em class="d-flex align-self-center align-items-center g-font-style-normal g-color-gray-light-v1 g-ml-50">
-                                        <i class="hs-admin-time icon-clock g-mr-5"></i>
-                                        <small> {{message.time | date:'short'}}</small>
-                                    </em>
-                                    <!-- End Chat. Message Area. Message Time -->
-                                </section>
-                                <!-- End Chat. Message Area. Message (From). -->
+                                            <!-- Chat. Message Area. Message. Body. -->
+                                            <div class="media-body">
+                                                <div
+                                                    class="d-inline-block g-width-170 g-width-auto--sm g-bg-gray-light-v8 g-font-size-12 g-font-size-default--lg g-color-gray-dark-v6 g-rounded-10 g-pa-10-15">
+                                                    <p class="mb-0">{{message.message}}</p>
+                                                </div>
+                                            </div>
+                                            <i class="hs-admin-more-alt" (click)="offensiveMessage(message.id)"></i> !
+                                            <i class="hs-admin-more-alt"
+                                               (click)="discardOffensiveMessage(message.id)"></i>
+                                            <!-- End Chat. Message Area. Message. Body. -->
+                                        </div>
+
+                                        <!-- Chat. Message Area. Message Time -->
+                                        <em class="d-flex align-self-center align-items-center g-font-style-normal g-color-gray-light-v1 g-ml-50">
+                                            <i class="hs-admin-time icon-clock g-mr-5"></i>
+                                            <small> {{message.time | date:'short'}}</small>
+                                        </em>
+                                        <!-- End Chat. Message Area. Message Time -->
+                                    </section>
+                                    <!-- End Chat. Message Area. Message (From). -->
 
                                 </div>
-                                                            
-                            <footer class="g-bg-gray-light-v8 g-px-15 g-px-30--lg g-py-10 g-py-25--lg">
-                                <form name="chatForm" (ngSubmit)="sendMessage(message)" #chatForm="ngForm">
-                                    <div class="media align-items-top">
-                                        <div class="d-flex">
-                                            <label class="u-file-attach-v2 g-line-height-1 g-color-gray-dark-v6 mb-0">
-                                                <input id="fileAttachment" name="file-attachment" type="file">
-                                                <i class="hs-admin-clip g-font-size-18"></i>
-                                            </label>
-                                        </div>
 
-                                        <div class="media-body g-ml-25">
+                                <footer class="g-bg-gray-light-v8 g-px-15 g-px-30--lg g-py-10 g-py-25--lg">
+                                    <form name="chatForm" (ngSubmit)="sendMessage(message)" #chatForm="ngForm">
+                                        <div class="media align-items-top">
+                                            <div class="d-flex">
+                                                <label
+                                                    class="u-file-attach-v2 g-line-height-1 g-color-gray-dark-v6 mb-0">
+                                                    <input id="fileAttachment" name="file-attachment" type="file">
+                                                    <i class="hs-admin-clip g-font-size-18"></i>
+                                                </label>
+                                            </div>
+
+                                            <div class="media-body g-ml-25">
                                             <textarea name="message" [(ngModel)]="message" autocomplete="off"
-                                                    class="form-control u-textarea-expandable g-resize-none g-bg-transparent g-brd-none w-100 p-0 g-mt-minus-3"
-                                                    placeholder="Type Something"></textarea>
-                                        </div>
+                                                      class="form-control u-textarea-expandable g-resize-none g-bg-transparent g-brd-none w-100 p-0 g-mt-minus-3"
+                                                      placeholder="Type Something"></textarea>
+                                            </div>
 
-                                        <div class="d-flex ml-auto">
-                                            <button type="submit" class="btn btn-link d-flex align-self-top align-items-top u-link-v5 g-color-lightblue-v3 g-color-lightblue-v4--hover p-0 g-ml-15">
-                                                <i class="hs-admin-arrow-top-right g-font-size-18 g-line-height-1_4"></i>
-                                                <span class="g-hidden-sm-down g-font-weight-300 g-font-size-12 g-font-size-default--md g-ml-4 g-ml-8--md">Send</span>
-                                            </button>
+                                            <div class="d-flex ml-auto">
+                                                <button type="submit"
+                                                        class="btn btn-link d-flex align-self-top align-items-top u-link-v5 g-color-lightblue-v3 g-color-lightblue-v4--hover p-0 g-ml-15">
+                                                    <i class="hs-admin-arrow-top-right g-font-size-18 g-line-height-1_4"></i>
+                                                    <span
+                                                        class="g-hidden-sm-down g-font-weight-300 g-font-size-12 g-font-size-default--md g-ml-4 g-ml-8--md">Send</span>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </form>
-                            </footer>
+                                    </form>
+                                </footer>
+                            </div>
+                            <!-- End Chat. Message Area. -->
                         </div>
-                        <!-- End Chat. Message Area. -->
+
                     </div>
-               
                 </div>
             </div>
-        </div>
-        <div *ngSwitchCase="false">
-            <div class="alert alert-warning" *ngSwitchCase="false">
-                <a class="alert-link" (click)="login()">Sign in</a> or
-                <a class="alert-link" routerLink="register">register a new account</a>
+            <div *ngSwitchCase="false">
+                <div class="alert alert-warning" *ngSwitchCase="false">
+                    <a class="alert-link" (click)="login()">Sign in</a> or
+                    <a class="alert-link" routerLink="register">register a new account</a>
+                </div>
             </div>
         </div>
     </div>
