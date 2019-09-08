@@ -28,7 +28,7 @@
                             <div class="g-height-59_5vh--lg jh-chat-box-scroll">
                                 <!-- Chat List -->
                                 
-                                <div *ngFor="let user of users ;trackBy: trackId" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
+                                <div *ngFor="let user of users" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
                                     <!-- Chat List Item: typing -->
                                     <div>
                                     <section
@@ -60,7 +60,7 @@
 
                                 </div>
 
-                                <div *ngFor="let chatRoom of chatRooms ;trackBy: trackId" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
+                                <div *ngFor="let chatRoom of chatRooms" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
                                     <!-- Chat List Item: typing -->
                                     <div (click)="fetchChatRoom(chatRoom.id)">
                                     <section

@@ -63,6 +63,12 @@ public class UserService {
                 // activate given user for the registration key.
                 user.setActivated(true);
                 user.setActivationKey(null);
+                ChatUserDTO chatuserDTO=new ChatUserDTO();
+                chatuserDTO.setUserId(user.getId());
+                Instant creationDate=Instant.now();
+                chatuserDTO.setCreationDate(creationDate); 
+                chatuserDTO.setBannedUser(false);
+                chatUserService.save(chatuserDTO);
                 this.clearUserCaches(user);
                 log.debug("Activated user: {}", user);
                 return user;
@@ -123,14 +129,9 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
-        User saveduser=userRepository.save(newUser);
+        userRepository.save(newUser);
         this.clearUserCaches(newUser);
-        ChatUserDTO chatuserDTO=new ChatUserDTO();
-        chatuserDTO.setUserId(saveduser.getId());
-        Instant creationDate=Instant.now();
-        chatuserDTO.setCreationDate(creationDate); 
-        chatuserDTO.setBannedUser(false);
-        ChatUserDTO result = chatUserService.save(chatuserDTO);
+       
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
