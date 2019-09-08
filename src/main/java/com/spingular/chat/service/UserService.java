@@ -7,15 +7,18 @@ import com.spingular.chat.repository.AuthorityRepository;
 import com.spingular.chat.repository.UserRepository;
 import com.spingular.chat.security.AuthoritiesConstants;
 import com.spingular.chat.security.SecurityUtils;
+import com.spingular.chat.service.dto.ChatUserDTO;
 import com.spingular.chat.service.dto.UserDTO;
 import com.spingular.chat.service.util.RandomUtil;
 import com.spingular.chat.web.rest.errors.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +45,9 @@ public class UserService {
     private final AuthorityRepository authorityRepository;
 
     private final CacheManager cacheManager;
+    
+    @Autowired
+    private ChatUserService chatUserService;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
         this.userRepository = userRepository;
@@ -57,6 +63,12 @@ public class UserService {
                 // activate given user for the registration key.
                 user.setActivated(true);
                 user.setActivationKey(null);
+                ChatUserDTO chatuserDTO=new ChatUserDTO();
+                chatuserDTO.setUserId(user.getId());
+                Instant creationDate=Instant.now();
+                chatuserDTO.setCreationDate(creationDate); 
+                chatuserDTO.setBannedUser(false);
+                chatUserService.save(chatuserDTO);
                 this.clearUserCaches(user);
                 log.debug("Activated user: {}", user);
                 return user;
@@ -119,6 +131,7 @@ public class UserService {
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
+       
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
@@ -186,6 +199,7 @@ public class UserService {
                 log.debug("Changed Information for User: {}", user);
             });
     }
+    
 
     /**
      * Update all information for a specific user, and return the modified user.
@@ -253,7 +267,11 @@ public class UserService {
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {
         return userRepository.findOneWithAuthoritiesByLogin(login);
     }
-
+    
+   public List<User> getSearchList(String key) {
+        return userRepository.findAllByLoginOrFirstNameOrLastName(key,key,key);
+    }
+    
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities(Long id) {
         return userRepository.findOneWithAuthoritiesById(id);
