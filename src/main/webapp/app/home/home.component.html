@@ -234,7 +234,7 @@
 
                             <!-- Chat. Message Area. Messages. -->
                             <div class="jh-chat-box-scroll g-height-50vh--lg g-pa-15 g-pa-25--lg">
-                                <div *ngFor="let message of messages">
+                                <div *ngFor="let chatMessage of chatMessages">
                                     <!-- Chat. Message Area. Message (From). -->
                                     <section class="g-mb-30">
                                         <div class="media g-mb-12">
@@ -250,19 +250,28 @@
                                             <div class="media-body">
                                                 <div
                                                     class="d-inline-block g-width-170 g-width-auto--sm g-bg-gray-light-v8 g-font-size-12 g-font-size-default--lg g-color-gray-dark-v6 g-rounded-10 g-pa-10-15">
-                                                    <p class="mb-0">{{message.message}}</p>
+                                                    <p class="mb-0">{{chatMessage.message}}</p>
                                                 </div>
                                             </div>
-                                            <i class="hs-admin-more-alt" (click)="offensiveMessage(message.id)"></i> !
+                                            <div *ngIf="chatMessage.offmsg===true">
+											 <i class="fa fa-bell-slash" (click)="discardOffensiveMessage(chatMessage.id)"></i>
+											</div>
+											<div *ngIf="chatMessage.offmsg===false">
+											 <i class="fa fa-bell" (click)="offensiveMessage(chatMessage.id)"></i>
+											</div>
+                                            <!-- 
+                                            <i class="hs-admin-more-alt" (click)="offensiveMessage(chatMessage.id)"></i> !
                                             <i class="hs-admin-more-alt"
-                                               (click)="discardOffensiveMessage(message.id)"></i>
+                                               (click)="discardOffensiveMessage(chatMessage.id)"></i> 
+                                             -->
+
                                             <!-- End Chat. Message Area. Message. Body. -->
                                         </div>
 
                                         <!-- Chat. Message Area. Message Time -->
                                         <em class="d-flex align-self-center align-items-center g-font-style-normal g-color-gray-light-v1 g-ml-50">
                                             <i class="hs-admin-time icon-clock g-mr-5"></i>
-                                            <small> {{message.time | date:'short'}}</small>
+                                            <small> {{chatMessage.time | date:'short'}}</small>
                                         </em>
                                         <!-- End Chat. Message Area. Message Time -->
                                     </section>

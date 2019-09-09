@@ -11,6 +11,7 @@ export interface IChatMessage {
   offensiveMessages?: IOffensiveMessage[];
   chatRoomId?: number;
   chatUserId?: number;
+  offmsg?: boolean;
 }
 
 export class ChatMessage implements IChatMessage {
@@ -23,9 +24,11 @@ export class ChatMessage implements IChatMessage {
     public chatNotifications?: IChatNotification[],
     public offensiveMessages?: IOffensiveMessage[],
     public chatRoomId?: number,
-    public chatUserId?: number
+    public chatUserId?: number,
+    public offmsg?: boolean
   ) {
     this.isReceived = this.isReceived || false;
     this.isDelivered = this.isDelivered || false;
+    this.offmsg = this.offmsg || false;
   }
 }
