@@ -417,7 +417,7 @@ export class HomeComponent implements OnInit {
     this.jhiAlertService.error(errorMessage, null, null);
   }
 
-  protected searchcontact() {
+  searchcontact() {
     this.users = [];
     this.modal.initialize(this.searchtext);
     if (this.modal.users) {

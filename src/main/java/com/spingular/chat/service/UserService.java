@@ -63,6 +63,7 @@ public class UserService {
                 // activate given user for the registration key.
                 user.setActivated(true);
                 user.setActivationKey(null);
+                createChatuser(user);
                 this.clearUserCaches(user);
                 log.debug("Activated user: {}", user);
                 return user;
@@ -123,14 +124,9 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
-        User saveduser=userRepository.save(newUser);
+        userRepository.save(newUser);
         this.clearUserCaches(newUser);
-        ChatUserDTO chatuserDTO=new ChatUserDTO();
-        chatuserDTO.setUserId(saveduser.getId());
-        Instant creationDate=Instant.now();
-        chatuserDTO.setCreationDate(creationDate); 
-        chatuserDTO.setBannedUser(false);
-        ChatUserDTO result = chatUserService.save(chatuserDTO);
+       
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
@@ -219,6 +215,9 @@ public class UserService {
                 user.setEmail(userDTO.getEmail().toLowerCase());
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
+                if(userDTO.isActivated() && !chatUserExist(user.getId())) {
+                	createChatuser(user);
+                }
                 user.setLangKey(userDTO.getLangKey());
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
@@ -232,6 +231,23 @@ public class UserService {
                 return user;
             })
             .map(UserDTO::new);
+    }
+    
+    public boolean chatUserExist(long id) {
+    	log.debug("Goldi data"+chatUserService.findOne(id).isPresent());
+    	return chatUserService.findOne(id).isPresent();  	
+    }
+    
+    
+    public void createChatuser(User user) {
+    	
+    	ChatUserDTO chatuserDTO=new ChatUserDTO();
+        chatuserDTO.setUserId(user.getId());
+        Instant creationDate=Instant.now();
+        chatuserDTO.setCreationDate(creationDate); 
+        chatuserDTO.setBannedUser(false);
+        chatUserService.save(chatuserDTO);
+    	
     }
 
     public void deleteUser(String login) {
