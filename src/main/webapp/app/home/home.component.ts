@@ -305,16 +305,35 @@ export class HomeComponent implements OnInit {
       //      console.log('CONSOLOG: M:fetchChatRoom & O: query : ', query);
       this.chatMessageService.query(query).subscribe(
         (res: HttpResponse<IChatMessage[]>) => {
-          this.messages = res.body;
-          console.log('CONSOLOG: M:fetchChatRoom & O: this.messages : ', this.messages);
-          const query2 = {};
-          query2['chatRoomId.equals'] = this.currentChatRoomId;
-          query2['chatUserId.equals'] = this.chatUser.id;
-          query2['queryParams'] = 2;
+          this.chatMessages = res.body;
+          console.log('CONSOLOG: M:fetchChatRoom & O: this.messages : ', this.chatMessages);
+          this.chatMessages.forEach(chatMessage => {
+            const query2 = {};
+            query2['chatMessageId.equals'] = chatMessage.id;
+            query2['chatUserId.equals'] = chatMessage.chatUserId;
+            query2['queryParams'] = 2;
+            //          console.log('CONSOLOG: M:fetchChatRoom & O: query2 : ', query2);
+            this.offensiveMessageService.query(query2).subscribe(
+              (res2: HttpResponse<IOffensiveMessage[]>) => {
+                this.offensiveMessages = res2.body;
+                // console.log('CONSOLOG: M:fetchChatRoom & O: this.offensiveMessages : ', this.offensiveMessages);
+                if (this.offensiveMessages.length >= 1) {
+                  chatMessage.offmsg = true;
+                } else {
+                  chatMessage.offmsg = false;
+                }
+              },
+              (res2: HttpErrorResponse) => this.onError(res2.message)
+            );
+          });
+          const query3 = {};
+          query3['chatRoomId.equals'] = this.currentChatRoomId;
+          query3['chatUserId.equals'] = this.chatUser.id;
+          query3['queryParams'] = 2;
           //          console.log('CONSOLOG: M:fetchChatRoom & O: query2 : ', query2);
-          this.chatNotificationService.query(query2).subscribe(
-            (res2: HttpResponse<IChatNotification[]>) => {
-              this.chatNotifications = res2.body;
+          this.chatNotificationService.query(query3).subscribe(
+            (res3: HttpResponse<IChatNotification[]>) => {
+              this.chatNotifications = res3.body;
               //              console.log('CONSOLOG: M:fetchChatRoom & O: this.chatNotifications : ', this.chatNotifications);
               if (this.chatNotifications) {
                 this.chatNotifications.forEach(chatNotification => {
@@ -323,7 +342,7 @@ export class HomeComponent implements OnInit {
                 });
               }
             },
-            (res2: HttpErrorResponse) => this.onError(res2.message)
+            (res3: HttpErrorResponse) => this.onError(res3.message)
           );
         },
         (res: HttpErrorResponse) => this.onError(res.message)
