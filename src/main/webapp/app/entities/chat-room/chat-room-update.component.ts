@@ -13,7 +13,6 @@ import { IChatUser } from 'app/shared/model/chat-user.model';
 import { ChatUserService } from 'app/entities/chat-user';
 
 import { AccountService } from 'app/core';
-import { debug } from 'util';
 
 @Component({
   selector: 'jhi-chat-room-update',
@@ -55,7 +54,7 @@ export class ChatRoomUpdateComponent implements OnInit {
     this.accountService.identity().then(account => {
       this.account = account;
       const query = {};
-      query['chatUserId.equals'] = this.account.id;
+      query['userId.equals'] = this.account.id;
       console.log('CONSOLOG: M:ngOnInit & O: query : ', query);
       this.chatUserService.query(query).subscribe(
         (res: HttpResponse<IChatUser[]>) => {
@@ -160,7 +159,7 @@ export class ChatRoomUpdateComponent implements OnInit {
   }
 
   private createFromForm(): IChatRoom {
-    const entity = {
+    return {
       ...new ChatRoom(),
       id: this.editForm.get(['id']).value,
       creationDate:
@@ -174,7 +173,6 @@ export class ChatRoomUpdateComponent implements OnInit {
       image: this.editForm.get(['image']).value,
       chatUserId: this.chatuser.id
     };
-    return entity;
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IChatRoom>>) {
