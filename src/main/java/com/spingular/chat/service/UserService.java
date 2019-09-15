@@ -234,7 +234,6 @@ public class UserService {
     }
     
     public boolean chatUserExist(long id) {
-    	log.debug("Goldi data"+chatUserService.findOne(id).isPresent());
     	return chatUserService.findOne(id).isPresent();  	
     }
     

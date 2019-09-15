@@ -75,7 +75,7 @@
                                      class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto">
                                     <!-- <div *ngFor="let chatRoom of chatRooms ;trackBy: trackId" class="d-flex d-lg-block g-brd-bottom g-brd-none--lg g-brd-gray-light-v4 g-overflow-x-auto"> DELETE IT -->
                                     <!-- Chat List Item: typing -->
-                                    <div (click)="fetchChatRoom(chatRoom.id)">
+                                    <div (click)="fetchChatRoom(chatRoom.id,chatRoom.roomName)">
                                         <section
                                             class="media justify-content-center g-bg-gray-light-v8--active g-brd-bottom--lg g-brd-gray-light-v4 g-pa-15 g-pa-25--lg">
                                             <!-- Chat List Item: Avatar -->
@@ -85,7 +85,7 @@
                                             class="u-badge-v2--md u-badge--bottom-right g-bg-teal-v2 g-mb-8 g-mr-8"></span>
                                         <img
                                             class="rounded-circle g-width-45 g-width-55--lg g-height-45 g-height-55--lg"
-                                            src="../../content/images/img-temp/200x200/img2.jpg"
+                                            [src]="'data:' + chatRoom.imageContentType + ';base64,' + chatRoom.image"
                                             alt="Image Description">
                                       </span>
                                             </div>
@@ -111,7 +111,7 @@
                                                     <div class="d-flex align-self-center g-mr-15">
                                                         <img src="../../content/images/typing.gif" alt="Typing">
                                                     </div>
-                                                    <p class="media-body align-self-center mb-0">Typing…</p>
+                                                    <p class="media-body align-self-center mb-0"></p>
 
                                                     <!-- Chat List Item: Unread Messages -->
                                                     <div
@@ -146,7 +146,7 @@
                                            data-dropdown-target="#chat-searchform-1" data-dropdown-type="css-animation"
                                            data-dropdown-duration="300" data-dropdown-animation-in="fadeInUp"
                                            data-dropdown-animation-out="fadeOutDown">
-                                            <i class="hs-admin-search"></i>
+                                            <!-- <i class="hs-admin-search"></i> -->
                                         </a>
 
                                         <!-- Chat. Message Area. Search Form -->
@@ -166,14 +166,14 @@
                                         <!-- End Chat. Message Area. Search Form -->
                                         <!-- End Chat. Message Area. Search -->
 
-                                        <a class="g-color-gray-dark-v6 g-hidden-sm-down" href="#!">History</a>
+                                        <!-- <a class="g-color-gray-dark-v6 g-hidden-sm-down" href="#!">History</a> -->
                                     </div>
 
                                     <div
                                         class="media-body d-flex align-self-center justify-content-center g-font-size-16--md g-color-black">
-                                        <a class="g-color-black" href="#!">I<span class="g-hidden-sm-up">.</span><span
-                                            class="g-hidden-sm-down">saac&nbsp;</span>
-                                            McDonald</a>
+                                        <a class="g-color-black" href="#!">{{currentChatRoomName}}<span class="g-hidden-sm-up">.</span><span
+                                            class="g-hidden-sm-down">&nbsp;</span>
+                                            </a>
                                     </div>
 
                                     <div

@@ -75,6 +75,7 @@ export class HomeComponent implements OnInit {
   reverse: any;
 
   currentChatRoomId: number;
+  currentChatRoomName: String;
   searchtext: String;
 
   arrayAux = [];
@@ -174,10 +175,10 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  private filterArray(chatRooms) {
+  private filterArray(chatRooms: IChatRoom[]) {
     this.arrayAux = [];
     this.arrayIds = [];
-    chatRooms.map(x => {
+    chatRooms.map((x: { id: any }) => {
       if (this.arrayIds.length >= 1 && this.arrayIds.includes(x.id) === false) {
         this.arrayAux.push(x);
         this.arrayIds.push(x.id);
@@ -195,7 +196,7 @@ export class HomeComponent implements OnInit {
   }
 
   registerAuthenticationSuccess() {
-    this.eventManager.subscribe('authenticationSuccess', message => {
+    this.eventManager.subscribe('authenticationSuccess', (message: any) => {
       this.accountService.identity().then(account => {
         this.currentAccount = account;
         this.chatService.disconnect();
@@ -205,7 +206,7 @@ export class HomeComponent implements OnInit {
   }
 
   registerLogoutSuccess() {
-    this.eventManager.subscribe('logoutSuccess', message => {
+    this.eventManager.subscribe('logoutSuccess', (message: any) => {
       this.chatService.disconnect();
       this.chatService.connect();
     });
@@ -219,7 +220,7 @@ export class HomeComponent implements OnInit {
     this.modalRef = this.loginModalService.open();
   }
 
-  sendMessage(message) {
+  sendMessage(message: string) {
     if (message.length === 0) {
       return;
     }
@@ -295,8 +296,9 @@ export class HomeComponent implements OnInit {
 
   loadAll() {}
 
-  fetchChatRoom(chatRoomId) {
+  fetchChatRoom(chatRoomId: number, chatRoomName: String) {
     //    console.log('CONSOLOG: M:fetchChatRoom & O: chatRoomId : ', chatRoomId);
+    this.currentChatRoomName = chatRoomName;
     this.currentChatRoomId = chatRoomId;
     if (chatRoomId !== undefined) {
       const query = {};
@@ -350,7 +352,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  offensiveMessage(messageId) {
+  offensiveMessage(messageId: number) {
     //    console.log('CONSOLOG: M:offensiveMessage & O: messageId : ', messageId);
     this.offensiveMessaged = new Object();
     this.offensiveMessaged.creationDate = moment(moment().format('YYYY-MM-DDTHH:mm'), 'YYYY-MM-DDTHH:mm');
@@ -362,7 +364,7 @@ export class HomeComponent implements OnInit {
     // tengo que crear un offensive message y luego si vuelven a hacer clic quitarlo
   }
 
-  discardOffensiveMessage(messageId) {
+  discardOffensiveMessage(messageId: any) {
     const query = {};
     if (this.currentAccount.id != null) {
       query['chatUserId.equals'] = this.chatUser.id;
@@ -382,7 +384,7 @@ export class HomeComponent implements OnInit {
   }
 
   registerChangeInChatRooms() {
-    this.eventSubscriber = this.eventManager.subscribe('chatRoomListModification', response => this.loadAll());
+    this.eventSubscriber = this.eventManager.subscribe('chatRoomListModification', (response: any) => this.loadAll());
   }
 
   sort() {
