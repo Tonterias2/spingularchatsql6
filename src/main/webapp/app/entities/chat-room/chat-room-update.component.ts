@@ -171,7 +171,7 @@ export class ChatRoomUpdateComponent implements OnInit {
       privateRoom: this.editForm.get(['privateRoom']).value,
       imageContentType: this.editForm.get(['imageContentType']).value,
       image: this.editForm.get(['image']).value,
-      chatUserId: this.chatuser.id
+      chatUserId: this.editForm.get(['chatUserId']).value
     };
   }
 

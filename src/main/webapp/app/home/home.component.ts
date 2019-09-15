@@ -108,7 +108,7 @@ export class HomeComponent implements OnInit {
     this.accountService.identity().then(account => {
       this.currentAccount = account;
       const query = {};
-      query['id.equals'] = this.currentAccount.id;
+      query['userId.equals'] = this.currentAccount.id;
       //      console.log('CONSOLOG: M:ngOnInit & O: query : ', query);
       this.chatUserService.query(query).subscribe(
         (res: HttpResponse<IChatUser[]>) => {
@@ -224,7 +224,7 @@ export class HomeComponent implements OnInit {
       return;
     }
     this.chatMessage = new Object();
-    this.chatMessage.chatUserId = this.currentAccount.id;
+    this.chatMessage.chatUserId = this.chatUser.id;
     this.chatMessage.chatRoomId = this.currentChatRoomId;
     this.chatMessage.message = message;
     //      console.log('CONSOLOG: M:sendMessage & O: this.chatMessage: ', this.chatMessage);
