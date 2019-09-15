@@ -83,9 +83,13 @@
                                         <span class="d-inline-block g-pos-rel">
                                         <span
                                             class="u-badge-v2--md u-badge--bottom-right g-bg-teal-v2 g-mb-8 g-mr-8"></span>
-                                        <img
+                                        <img *ngIf="chatRoom.image"
                                             class="rounded-circle g-width-45 g-width-55--lg g-height-45 g-height-55--lg"
                                             [src]="'data:' + chatRoom.imageContentType + ';base64,' + chatRoom.image"
+                                            alt="Image Description">
+                                        <img *ngIf="!(chatRoom.image)"
+                                            class="rounded-circle g-width-45 g-width-55--lg g-height-45 g-height-55--lg"
+                                            src="../../content/images/img-temp/200x200/img2.jpg"
                                             alt="Image Description">
                                       </span>
                                             </div>
