@@ -72,7 +72,8 @@ public class ChatUserServiceImpl implements ChatUserService {
     @Override
     @Transactional(readOnly = true)
     public Optional<ChatUserDTO> findOne(Long id) {
-        log.debug("Request to get ChatUser : {}", id);
+  
+        log.info("Request to get ChatUser : {}", id);
         return chatUserRepository.findById(id)
             .map(chatUserMapper::toDto);
     }

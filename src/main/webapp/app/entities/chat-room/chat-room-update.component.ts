@@ -54,12 +54,12 @@ export class ChatRoomUpdateComponent implements OnInit {
     this.accountService.identity().then(account => {
       this.account = account;
       const query = {};
-      query['id.equals'] = this.account.id;
+      query['userId.equals'] = this.account.id;
       console.log('CONSOLOG: M:ngOnInit & O: query : ', query);
       this.chatUserService.query(query).subscribe(
         (res: HttpResponse<IChatUser[]>) => {
           this.chatuser = res.body[0];
-          //            console.log('CONSOLOG: M:ngOnInit & O: this.chatUser : ', this.chatuser);
+          console.log('CONSOLOG: M:ngOnInit & O: this.chatUser : ', this.chatuser);
         },
         (res: HttpErrorResponse) => this.onError(res.message)
       );
@@ -149,15 +149,17 @@ export class ChatRoomUpdateComponent implements OnInit {
     this.isSaving = true;
     const chatRoom = this.createFromForm();
     if (chatRoom.id !== undefined) {
+      console.log('in chatuser update' + this);
       this.subscribeToSaveResponse(this.chatRoomService.update(chatRoom));
     } else {
       chatRoom.chatUserId = this.chatuser.id;
+      console.log('in chatuser update' + this);
       this.subscribeToSaveResponse(this.chatRoomService.create(chatRoom));
     }
   }
 
   private createFromForm(): IChatRoom {
-    const entity = {
+    return {
       ...new ChatRoom(),
       id: this.editForm.get(['id']).value,
       creationDate:
@@ -169,9 +171,8 @@ export class ChatRoomUpdateComponent implements OnInit {
       privateRoom: this.editForm.get(['privateRoom']).value,
       imageContentType: this.editForm.get(['imageContentType']).value,
       image: this.editForm.get(['image']).value,
-      chatUserId: this.editForm.get(['chatUserId']).value
+      chatUserId: this.chatuser.id
     };
-    return entity;
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IChatRoom>>) {

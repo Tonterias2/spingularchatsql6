@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ChatService } from '../shared';
 
-import { LoginModalService, AccountService, Account } from 'app/core';
+import { LoginModalService, AccountService, Account, UserService } from 'app/core';
 
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,6 +30,13 @@ import { ChatRoomAllowedUserService } from '../entities/chat-room-allowed-user/c
 import { IChatNotification, ChatNotification } from 'app/shared/model/chat-notification.model';
 import { ChatNotificationService } from '../entities/chat-notification/chat-notification.service';
 
+import { IOffensiveMessage } from 'app/shared/model/offensive-message.model';
+import { OffensiveMessageService } from '../entities/offensive-message/offensive-message.service';
+import { ContactModalComponent } from 'app/contact-modal/contact-modal.component';
+import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrier';
+import { threadId } from 'worker_threads';
+import { objectExpression } from '@babel/types';
+
 @Component({
   selector: 'jhi-home',
   templateUrl: './home.component.html',
@@ -40,7 +47,7 @@ export class HomeComponent implements OnInit {
   modalRef: NgbModalRef;
   messages: Array<Object> = [];
   message = '';
-
+  users: Array<Object> = [];
   chatMessage: IChatMessage;
   chatMessages: IChatMessage[];
   chatUser: IChatUser;
@@ -51,6 +58,8 @@ export class HomeComponent implements OnInit {
   notifyChatRoomAllowedUsers: IChatRoomAllowedUser[];
   chatNotifications: IChatNotification[];
   chatNotification: IChatNotification;
+  offensiveMessages: IOffensiveMessage[];
+  offensiveMessaged: IOffensiveMessage;
 
   currentAccount: any;
   error: any;
@@ -66,6 +75,7 @@ export class HomeComponent implements OnInit {
   reverse: any;
 
   currentChatRoomId: number;
+  searchtext: String;
 
   arrayAux = [];
   arrayIds = [];
@@ -80,10 +90,12 @@ export class HomeComponent implements OnInit {
     protected chatUserService: ChatUserService,
     protected chatRoomAllowedUserService: ChatRoomAllowedUserService,
     protected chatNotificationService: ChatNotificationService,
+    protected offensiveMessageService: OffensiveMessageService,
     protected parseLinks: JhiParseLinks,
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
-    protected router: Router
+    protected router: Router,
+    protected modal: ContactModalComponent
   ) {}
 
   ngOnInit() {
@@ -293,16 +305,35 @@ export class HomeComponent implements OnInit {
       //      console.log('CONSOLOG: M:fetchChatRoom & O: query : ', query);
       this.chatMessageService.query(query).subscribe(
         (res: HttpResponse<IChatMessage[]>) => {
-          this.messages = res.body;
-          //          console.log('CONSOLOG: M:fetchChatRoom & O: this.messages : ', this.messages);
-          const query2 = {};
-          query2['chatRoomId.equals'] = this.currentChatRoomId;
-          query2['chatUserId.equals'] = this.chatUser.id;
-          query2['queryParams'] = 2;
+          this.chatMessages = res.body;
+          console.log('CONSOLOG: M:fetchChatRoom & O: this.messages : ', this.chatMessages);
+          this.chatMessages.forEach(chatMessage => {
+            const query2 = {};
+            query2['chatMessageId.equals'] = chatMessage.id;
+            query2['chatUserId.equals'] = chatMessage.chatUserId;
+            query2['queryParams'] = 2;
+            //          console.log('CONSOLOG: M:fetchChatRoom & O: query2 : ', query2);
+            this.offensiveMessageService.query(query2).subscribe(
+              (res2: HttpResponse<IOffensiveMessage[]>) => {
+                this.offensiveMessages = res2.body;
+                // console.log('CONSOLOG: M:fetchChatRoom & O: this.offensiveMessages : ', this.offensiveMessages);
+                if (this.offensiveMessages.length >= 1) {
+                  chatMessage.offmsg = true;
+                } else {
+                  chatMessage.offmsg = false;
+                }
+              },
+              (res2: HttpErrorResponse) => this.onError(res2.message)
+            );
+          });
+          const query3 = {};
+          query3['chatRoomId.equals'] = this.currentChatRoomId;
+          query3['chatUserId.equals'] = this.chatUser.id;
+          query3['queryParams'] = 2;
           //          console.log('CONSOLOG: M:fetchChatRoom & O: query2 : ', query2);
-          this.chatNotificationService.query(query2).subscribe(
-            (res2: HttpResponse<IChatNotification[]>) => {
-              this.chatNotifications = res2.body;
+          this.chatNotificationService.query(query3).subscribe(
+            (res3: HttpResponse<IChatNotification[]>) => {
+              this.chatNotifications = res3.body;
               //              console.log('CONSOLOG: M:fetchChatRoom & O: this.chatNotifications : ', this.chatNotifications);
               if (this.chatNotifications) {
                 this.chatNotifications.forEach(chatNotification => {
@@ -311,12 +342,43 @@ export class HomeComponent implements OnInit {
                 });
               }
             },
-            (res2: HttpErrorResponse) => this.onError(res2.message)
+            (res3: HttpErrorResponse) => this.onError(res3.message)
           );
         },
         (res: HttpErrorResponse) => this.onError(res.message)
       );
     }
+  }
+
+  offensiveMessage(messageId) {
+    //    console.log('CONSOLOG: M:offensiveMessage & O: messageId : ', messageId);
+    this.offensiveMessaged = new Object();
+    this.offensiveMessaged.creationDate = moment(moment().format('YYYY-MM-DDTHH:mm'), 'YYYY-MM-DDTHH:mm');
+    this.offensiveMessaged.isOffensive = true;
+    this.offensiveMessaged.chatUserId = this.chatUser.id;
+    this.offensiveMessaged.chatMessageId = messageId;
+    //    console.log('CONSOLOG: M:offensiveMessage & O: this.offensiveMessaged : ', this.offensiveMessaged);
+    this.subscribeToSaveResponse(this.offensiveMessageService.create(this.offensiveMessaged));
+    // tengo que crear un offensive message y luego si vuelven a hacer clic quitarlo
+  }
+
+  discardOffensiveMessage(messageId) {
+    const query = {};
+    if (this.currentAccount.id != null) {
+      query['chatUserId.equals'] = this.chatUser.id;
+      query['chatMessageId.equals'] = messageId;
+      query['queryParams'] = 2;
+    }
+    this.offensiveMessageService.query(query).subscribe(
+      (res: HttpResponse<IOffensiveMessage[]>) => {
+        this.offensiveMessaged = res.body[0];
+        //        console.log('CONSOLOG: M:offensiveMessage & O: this.offensiveMessaged : ', this.offensiveMessaged);
+        if (this.offensiveMessaged) {
+          this.subscribeToSaveResponse(this.offensiveMessageService.delete(this.offensiveMessaged.id));
+        }
+      },
+      (res: HttpErrorResponse) => this.onError(res.message)
+    );
   }
 
   registerChangeInChatRooms() {
@@ -353,5 +415,15 @@ export class HomeComponent implements OnInit {
 
   protected onError(errorMessage: string) {
     this.jhiAlertService.error(errorMessage, null, null);
+  }
+
+  searchcontact() {
+    this.users = [];
+    this.modal.initialize(this.searchtext);
+    if (this.modal.users) {
+      this.modal.users.forEach(obj => {
+        this.users.push(obj.login);
+      });
+    }
   }
 }

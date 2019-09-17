@@ -20,6 +20,7 @@ import { Spingularchatsql6EntityModule } from './entities/entity.module';
 import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
+import { ContactModalComponent } from './contact-modal/contact-modal.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,15 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
     Spingularchatsql6EntityModule,
     Spingularchatsql6AppRoutingModule
   ],
-  declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
+  declarations: [
+    JhiMainComponent,
+    NavbarComponent,
+    ErrorComponent,
+    PageRibbonComponent,
+    ActiveMenuDirective,
+    FooterComponent,
+    ContactModalComponent
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

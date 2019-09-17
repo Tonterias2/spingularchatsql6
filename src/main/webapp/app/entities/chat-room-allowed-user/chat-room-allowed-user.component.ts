@@ -30,6 +30,8 @@ export class ChatRoomAllowedUserComponent implements OnInit, OnDestroy {
   previousPage: any;
   reverse: any;
 
+  isAdmin: boolean;
+
   constructor(
     protected chatRoomAllowedUserService: ChatRoomAllowedUserService,
     protected parseLinks: JhiParseLinks,
@@ -95,6 +97,7 @@ export class ChatRoomAllowedUserComponent implements OnInit, OnDestroy {
     this.loadAll();
     this.accountService.identity().then(account => {
       this.currentAccount = account;
+      this.isAdmin = this.accountService.hasAnyAuthority(['ROLE_ADMIN']);
     });
     this.registerChangeInChatRoomAllowedUsers();
   }

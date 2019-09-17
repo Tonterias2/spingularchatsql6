@@ -16,6 +16,8 @@ export class ChatUserComponent implements OnInit, OnDestroy {
   chatUsers: IChatUser[];
   currentAccount: any;
   eventSubscriber: Subscription;
+  owner: any;
+  isAdmin: boolean;
 
   constructor(
     protected chatUserService: ChatUserService,
@@ -44,8 +46,29 @@ export class ChatUserComponent implements OnInit, OnDestroy {
     this.loadAll();
     this.accountService.identity().then(account => {
       this.currentAccount = account;
+      this.owner = account.id;
+      this.isAdmin = this.accountService.hasAnyAuthority(['ROLE_ADMIN']);
     });
     this.registerChangeInChatUsers();
+  }
+
+  myChatUser() {
+    const query = {};
+    query['userId.equals'] = this.owner;
+    this.chatUserService
+      .query(query)
+      .pipe(
+        filter((res: HttpResponse<IChatUser[]>) => res.ok),
+        map((res: HttpResponse<IChatUser[]>) => res.body)
+      )
+      .subscribe(
+        (res: IChatUser[]) => {
+          //          console.log('CONSOLOG: M:myChatUser & O: query : ', query);
+          //          console.log('CONSOLOG: M:myChatUser & O: res : ', res);
+          this.chatUsers = res;
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
   }
 
   ngOnDestroy() {

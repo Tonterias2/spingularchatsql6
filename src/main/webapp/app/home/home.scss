@@ -10,6 +10,19 @@ Main page styles
   background-size: contain;
 }
 
+.chat-search-input {
+  height: 100%;
+}
+
+.chat-search-input:focus {
+  color:#495057;
+  background-color:#fff;
+  border-color:#fff;
+  outline:0;
+  box-shadow: none;
+  z-index: 0;
+}
+
 /* wait autoprefixer update to allow simple generation of high pixel density media query */
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
   only screen and (-moz-min-device-pixel-ratio: 2),
