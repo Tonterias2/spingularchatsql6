@@ -286,7 +286,7 @@
 
                                 </div>
 
-                                <footer class="g-bg-gray-light-v8 g-px-15 g-px-30--lg g-py-10 g-py-25--lg">
+                                <footer class="g-bg-gray-light-v8 g-px-15 g-px-30--lg g-py-10 g-py-25--lg" *ngIf="chatroomexist">
                                     <form name="chatForm" (ngSubmit)="sendMessage(message)" #chatForm="ngForm">
                                         <div class="media align-items-top">
                                             <div class="d-flex">

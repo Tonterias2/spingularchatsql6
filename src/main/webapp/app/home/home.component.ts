@@ -61,6 +61,7 @@ export class HomeComponent implements OnInit {
   offensiveMessages: IOffensiveMessage[];
   offensiveMessaged: IOffensiveMessage;
 
+  chatroomexist: boolean;
   currentAccount: any;
   error: any;
   success: any;
@@ -232,6 +233,7 @@ export class HomeComponent implements OnInit {
     this.chatService.sendMessage(this.chatMessage);
     this.message = '';
     this.notifyCRAUs();
+    this.fetchNewChatMessage();
   }
 
   notifyCRAUs() {
@@ -297,6 +299,7 @@ export class HomeComponent implements OnInit {
   loadAll() {}
 
   fetchChatRoom(chatRoomId: number, chatRoomName: String) {
+    this.chatroomexist = true;
     //    console.log('CONSOLOG: M:fetchChatRoom & O: chatRoomId : ', chatRoomId);
     this.currentChatRoomName = chatRoomName;
     this.currentChatRoomId = chatRoomId;
@@ -405,6 +408,9 @@ export class HomeComponent implements OnInit {
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IChatNotification>>) {
     result.subscribe((res: HttpResponse<IChatNotification>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
   }
+  protected subscribeToSaveMessage(result: Observable<HttpResponse<IChatMessage>>) {
+    result.subscribe((res: HttpResponse<IChatMessage>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+  }
 
   protected onSaveSuccess() {
     //    this.isSaving = false;
@@ -417,6 +423,14 @@ export class HomeComponent implements OnInit {
 
   protected onError(errorMessage: string) {
     this.jhiAlertService.error(errorMessage, null, null);
+  }
+  protected fetchNewChatMessage() {
+    const query = {};
+    query['chatRoomId.equals'] = this.currentChatRoomId;
+    query['queryParams'] = 1;
+    this.chatMessageService.query(query).subscribe((res: HttpResponse<IChatMessage[]>) => {
+      this.chatMessages = res.body;
+    });
   }
 
   searchcontact() {
