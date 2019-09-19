@@ -17,6 +17,8 @@ export class ChatNotificationComponent implements OnInit, OnDestroy {
   currentAccount: any;
   eventSubscriber: Subscription;
 
+  isAdmin: boolean;
+
   constructor(
     protected chatNotificationService: ChatNotificationService,
     protected jhiAlertService: JhiAlertService,
@@ -43,6 +45,7 @@ export class ChatNotificationComponent implements OnInit, OnDestroy {
     this.loadAll();
     this.accountService.identity().then(account => {
       this.currentAccount = account;
+      this.isAdmin = this.accountService.hasAnyAuthority(['ROLE_ADMIN']);
     });
     this.registerChangeInChatNotifications();
   }

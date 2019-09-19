@@ -180,15 +180,14 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     this.loadAll();
     this.accountService.identity().then(account => {
       this.currentAccount = account;
-      this.owner = account.id;
       this.isAdmin = this.accountService.hasAnyAuthority(['ROLE_ADMIN']);
       const query = {};
-      query['id.equals'] = this.currentAccount.id;
-      //        console.log('CONSOLOG: M:ngOnInit & O: query : ', query);
+      query['userId.equals'] = this.currentAccount.id;
       this.chatUserService.query(query).subscribe(
         (res: HttpResponse<IChatUser[]>) => {
           this.chatUser = res.body[0];
-          //            console.log('CONSOLOG: M:ngOnInit & O: this.chatUser : ', this.chatuser);
+          //          console.log('CONSOLOG: M:ngOnInit & O: this.chatUser : ', this.chatUser);
+          this.owner = this.chatUser.id;
         },
         (res: HttpErrorResponse) => this.onError(res.message)
       );

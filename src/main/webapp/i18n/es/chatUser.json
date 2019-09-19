@@ -4,6 +4,7 @@
       "home": {
         "title": "Chat Users",
         "createLabel": "Crear nuevo Chat User",
+        "myLabel": "Mi Chat User",
         "createOrEditLabel": "Crear o editar Chat User",
         "notFound": "No Chat User found"
       },
