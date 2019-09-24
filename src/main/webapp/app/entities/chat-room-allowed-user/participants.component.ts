@@ -142,7 +142,7 @@ export class ParticipantsComponent implements OnInit, OnDestroy {
 
   private chatLoggedUser() {
     const query = {};
-    query['id.equals'] = this.currentAccount.id;
+    query['userId.equals'] = this.currentAccount.id;
     //        console.log('CONSOLOG: M:ngOnInit & O: query : ', query);
     this.chatUserService.query(query).subscribe(
       (res: HttpResponse<IChatUser[]>) => {
