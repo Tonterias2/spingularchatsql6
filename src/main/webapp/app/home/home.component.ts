@@ -364,7 +364,7 @@ export class HomeComponent implements OnInit {
     this.offensiveMessaged.chatMessageId = messageId;
     //    console.log('CONSOLOG: M:offensiveMessage & O: this.offensiveMessaged : ', this.offensiveMessaged);
     this.subscribeToSaveResponse(this.offensiveMessageService.create(this.offensiveMessaged));
-    // tengo que crear un offensive message y luego si vuelven a hacer clic quitarlo
+    window.location.reload();
   }
 
   discardOffensiveMessage(messageId: any) {
@@ -377,9 +377,10 @@ export class HomeComponent implements OnInit {
     this.offensiveMessageService.query(query).subscribe(
       (res: HttpResponse<IOffensiveMessage[]>) => {
         this.offensiveMessaged = res.body[0];
-        //        console.log('CONSOLOG: M:offensiveMessage & O: this.offensiveMessaged : ', this.offensiveMessaged);
+        console.log('CONSOLOG: M:discardOffensiveMessage & O: this.offensiveMessaged : ', this.offensiveMessaged);
         if (this.offensiveMessaged) {
           this.subscribeToSaveResponse(this.offensiveMessageService.delete(this.offensiveMessaged.id));
+          window.location.reload();
         }
       },
       (res: HttpErrorResponse) => this.onError(res.message)
